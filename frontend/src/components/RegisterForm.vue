@@ -5,12 +5,23 @@
         <p>
             <label>Por favor rellene los siguientes campos: </label>
         </p>
+        <p>
+            <span class="label cc" style="margin-right:190px; font-size: large;">Ingrese su número de cédula</span>
+        </p>
 
         <p>
-            <input type="text" id="cc" v-model="state.cc" placeholder="Número de Cédula *" />
-            <span v-if="v$.name.$error">
-                {{ v$.cc.$errors[0].$message }}
-            </span>
+        <input type="text" id="cc" v-model="state.cc" placeholder="Número de Cédula *" />
+        <span v-if="v$.cc.$error">
+            {{ v$.cc.$errors[0].$message }}
+        </span>
+        </p>
+
+        <p>
+            {{ state.error }}
+        </p>
+
+        <p>
+            <span class="label name" style="margin-right:215px; font-size: large;">Ingrese su primer nombre</span>
         </p>
 
         <p>
@@ -21,6 +32,10 @@
         </p>
 
         <p>
+            <span class="label num" style="margin-right:180px; font-size: large;">Ingrese su número de teléfono</span>
+        </p>
+
+        <p>
             <input type="text" id="number" v-model="state.number" placeholder="Número de teléfono *" />
             <span v-if="v$.number.$error">
                 {{ v$.number.$errors[0].$message }}
@@ -28,11 +43,19 @@
         </p>
 
         <p>
+            <span class="label password" style="margin-right:215px; font-size: large;">Ingrese una contraseña</span>
+        </p>
+
+        <p>
             <input type="password" id="password" v-model="state.password.password"
-                placeholder="Contraseña* (debe tener al menos 8 caracteres)" />
+                placeholder="Contraseña * (debe tener al menos 6 caracteres)" />
             <span v-if="v$.password.password.$error">
                 {{ v$.password.password.$errors[0].$message }}
             </span>
+        </p>
+
+        <p>
+            <span class="label password" style="margin-right:170px; font-size: large;">Porfavor confirme la contraseña</span>
         </p>
 
         <p>
@@ -55,7 +78,7 @@
 </template>
 <script>
 import useValidate from '@vuelidate/core'
-import { required, minLength, sameAs, numeric, helpers } from '@vuelidate/validators'
+import { required, minLength, maxLength, sameAs, numeric, helpers } from '@vuelidate/validators'
 import axios from 'axios';
 import { computed, reactive } from 'vue';
 
@@ -70,28 +93,41 @@ export default {
             password: {
                 password: '',
                 confirm: '',
-            }
+            },
+
+            error: ''
         })
+
+        const minLengthCC = minLength(7)
+        const minLengthNum = minLength(10)
+        const minLengthPassword = minLength(6)
+
+        const maxLengthCC = maxLength(10)
+        const maxLengthNum = maxLength(10)
 
         const rules = computed(() => {
             return {
                 cc: {
-                    required: helpers.withMessage('Número de cédula no válido', required),
-                    minLength: minLength(10), numeric
+                    required: helpers.withMessage('Debe ingresar su cédula', required),
+                    minLength: helpers.withMessage('La cédula debe ser de al menos 7 dígitos', minLengthCC),
+                    numeric: helpers.withMessage('Debe ingresar un número de cédula', numeric),
+                    maxLength: helpers.withMessage('Máximo 10 dígitos', maxLengthCC)
                 },
                 name: { required: helpers.withMessage('Debe ingresar su nombre', required) },
                 number: {
                     required: helpers.withMessage('Número no válido', required),
-                    minLength: minLength(10)
+                    minLength: helpers.withMessage('El número debe ser de al menos 10 dígitos', minLengthNum),
+                    numeric: helpers.withMessage('Número no válido', numeric),
+                    maxLength: helpers.withMessage('Máximo 10 dígitos', maxLengthNum)
                 },
                 password: {
                     password: {
                         required: helpers.withMessage('Contraseña no válida', required),
-                        minLength: minLength(6)
+                        minLength: helpers.withMessage('La constraseña debe ser de al menos 6 caracteres', minLengthPassword)
                     },
                     confirm: {
                         required: helpers.withMessage('Las contraseñas no coinciden', required),
-                        sameAs: sameAs(state.password.password)
+                        sameAs: helpers.withMessage('Las contraseñas no coinciden', sameAs(state.password.password)),
                     }
                 }
             }
@@ -119,11 +155,11 @@ export default {
                     .then(response => {
                         console.log(response.data);
                         alert('Datos guardados con éxito')
-                        this.$router.push({ name: 'HomePage' })
+                        this.$router.push({ name: 'SessionPage' })
+                    }, err => {
+                        console.log(err.response)
+                        this.state.error = err.response.data.error
                     })
-                    .catch(error => {
-                        console.error(error);
-                    });
             } else {
                 alert('Datos no correctos')
             }

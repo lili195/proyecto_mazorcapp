@@ -1,4 +1,5 @@
 const { createPerson } = require('./models/person')
+const { people } = require('./config/db')
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
@@ -7,11 +8,11 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const bcrypt = require('bcrypt')
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 const initPassport = require('./passport-config')
 initPassport(passport,
@@ -38,57 +39,46 @@ app.use(cors({
     credentials: true
 }))
 
-// app.get('/', checkAuthenticated, (req, res) => {
-//     console.log('solicitud recibida de front')
-//     res.status(200).json({ name: req.user.name });
-// })
-
-// app.get('/login', checkNotAuthenticated, (req, res) => {
-//     res.render('login.ejs')
-// })
-
-// app.get('/register', checkNotAuthenticated, (req, res) => {
-//     res.render('register.ejs')
-// })
-
-app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true
-}))
-
-// app.post('/login', async (req, res) => {
-//     const { cc, password } = req.body;
-
-//     const user = await users.find({ cc });
-//     if (!user) {
-//         return res.status(401).json({ message: 'Invalid cc or password' });
-//     }
-
-//     const isPasswordValid = await bcrypt.compare(password, user.password);
-//     if (!isPasswordValid) {
-//         return res.status(401).json({ message: 'Invalid cc or password' });
-//     }
-
-//     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-//         expiresIn: '1h',
-//     });
-
-//     res.status(200).json({ token });
-// });
-
 app.post('/register', checkNotAuthenticated, async (req, res) => {
     console.log('solicitud recibida de front :)')
     try {
-        console.log(req.body)
-        createPerson(req.body.cc,
-            req.body.name,
-            req.body.number,
-            'P',
-            req.body.password)
-        res.status(201).send('Usuario registrado con éxito');
-    } catch {
-        res.status(400).send('Error en solicitud');
+        // buscar cc en la db
+        const existingPerson = await people.findOne({
+            where: {
+                id_person: req.body.cc,
+            },
+        });
+        // si ya existe, se envía el error
+        if (existingPerson) {
+            console.log('El número de cédula ya está en uso')
+            res.status(400).json({
+                title: 'Error de validación',
+                error: 'El número de cédula ya está en uso',
+            });
+        } else {
+        // Registro exitoso
+            await createPerson(
+                req.body.cc,
+                req.body.name,
+                req.body.number,
+                'P',
+                bcrypt.hashSync(req.body.password, 10)
+            );
+
+            res.status(200).json({
+                title: 'Registro exitoso',
+            });
+            console.log('======================')
+            console.log('Se registró correctamente :D')
+            console.log('======================')
+        }
+    } catch (error) {
+        // Otro tipo de error
+        res.status(500).json({
+            title: 'Error interno del servidor',
+            error: 'Ocurrió un error al procesar la solicitud',
+        });
+
     }
 })
 

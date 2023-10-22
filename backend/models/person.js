@@ -29,34 +29,11 @@ const createPerson = async (
     console.log(newUser)
     return newUser
   } catch (error) {
+    console.log('NO SE PUDO PORQUE: ')
     console.log(error)
     return error
   }
 }
-
-// /**
-//  * find User per email
-//  */
-
-// const searchUser = async (email) => {
-//   try {
-//     return await user.findOne({
-//       where: { email }
-//     })
-//   } catch (error) {
-//     return error
-//   }
-// }
-
-// async function findUser (id) {
-//   try {
-//     return await user.findOne({
-//       where: { id }
-//     })
-//   } catch (err) {
-//     return err
-//   }
-// }
 
 function eliminarDiacriticos(texto) {
   return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
