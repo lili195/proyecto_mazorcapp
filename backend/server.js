@@ -1,4 +1,4 @@
-const { createPerson } = require('./models/person')
+const { createPerson, searchPerson } = require('./models/person')
 const { people } = require('./config/db')
 
 if (process.env.NODE_ENV !== 'production') {
@@ -39,18 +39,16 @@ app.use(cors({
     credentials: true
 }))
 
-app.post('/register', checkNotAuthenticated, async (req, res) => {
+app.post('/register', async (req, res) => {
     console.log('solicitud recibida de front :)')
     try {
-        // buscar cc en la db
-        const existingPerson = await people.findOne({
-            where: {
-                id_person: req.body.cc,
-            },
-        });
-        // si ya existe, se envía el error
-        if (existingPerson) {
+        // si ya existe la cc en la db, se envía el error
+        if (searchPerson(req.body.cc)) {
+            
+            console.log('======================')
             console.log('El número de cédula ya está en uso')
+            console.log('======================')
+
             res.status(400).json({
                 title: 'Error de validación',
                 error: 'El número de cédula ya está en uso',
@@ -82,6 +80,10 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
     }
 })
 
+app.post('login', async (req, res) => {
+
+})
+
 // app.delete('/logout', (req, res) => {
 //     req.logOut(req.user, err => {
 //         if (err) return next(err);
@@ -89,24 +91,10 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
 //     })
 // })
 
-function checkAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next()
-    }
-    res.redirect('/login')
-}
-
-function checkNotAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return res.redirect('/')
-    }
-    next()
-}
-
 const { conn } = require('./config/db')
 
 // colocar true para pruebas (reiniciar la base de datos)
-conn.sync({ force: true }).then(async () => {
+conn.sync({ force: false }).then(async () => {
     app.listen(3000, () => {
         console.log(`%s listening at 3000`) // eslint-disable-line no-console
     })
