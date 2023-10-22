@@ -5,17 +5,23 @@
         <p>
             <label>Por favor rellene los siguientes campos: </label>
         </p>
-
         <p>
-            <label>Cédula</label>
-            <input type="text" id="cc" v-model="state.cc" placeholder="Número de Cédula *" />
-            <span v-if="v$.cc.$error">
-                {{ v$.cc.$errors[0].$message }}
-            </span>
+            <span class="label cc" style="margin-right:190px; font-size: large;">Ingrese su número de cédula</span>
         </p>
 
         <p>
-            {{state.error}}
+        <input type="text" id="cc" v-model="state.cc" placeholder="Número de Cédula *" />
+        <span v-if="v$.cc.$error">
+            {{ v$.cc.$errors[0].$message }}
+        </span>
+        </p>
+
+        <p>
+            {{ state.error }}
+        </p>
+
+        <p>
+            <span class="label name" style="margin-right:215px; font-size: large;">Ingrese su primer nombre</span>
         </p>
 
         <p>
@@ -26,10 +32,18 @@
         </p>
 
         <p>
+            <span class="label num" style="margin-right:180px; font-size: large;">Ingrese su número de teléfono</span>
+        </p>
+
+        <p>
             <input type="text" id="number" v-model="state.number" placeholder="Número de teléfono *" />
             <span v-if="v$.number.$error">
                 {{ v$.number.$errors[0].$message }}
             </span>
+        </p>
+
+        <p>
+            <span class="label password" style="margin-right:215px; font-size: large;">Ingrese una contraseña</span>
         </p>
 
         <p>
@@ -38,6 +52,10 @@
             <span v-if="v$.password.password.$error">
                 {{ v$.password.password.$errors[0].$message }}
             </span>
+        </p>
+
+        <p>
+            <span class="label password" style="margin-right:170px; font-size: large;">Porfavor confirme la contraseña</span>
         </p>
 
         <p>
@@ -91,7 +109,7 @@ export default {
             return {
                 cc: {
                     required: helpers.withMessage('Debe ingresar su cédula', required),
-                    minLength:  helpers.withMessage('La cédula debe ser de al menos 7 dígitos', minLengthCC), 
+                    minLength: helpers.withMessage('La cédula debe ser de al menos 7 dígitos', minLengthCC),
                     numeric: helpers.withMessage('Debe ingresar un número de cédula', numeric),
                     maxLength: helpers.withMessage('Máximo 10 dígitos', maxLengthCC)
                 },
@@ -105,7 +123,7 @@ export default {
                 password: {
                     password: {
                         required: helpers.withMessage('Contraseña no válida', required),
-                        minLength: helpers.withMessage('La constraseña debe ser de al menos 6 caracteres', minLengthPassword) 
+                        minLength: helpers.withMessage('La constraseña debe ser de al menos 6 caracteres', minLengthPassword)
                     },
                     confirm: {
                         required: helpers.withMessage('Las contraseñas no coinciden', required),
