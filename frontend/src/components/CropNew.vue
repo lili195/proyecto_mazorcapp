@@ -20,8 +20,16 @@
 
 			<label>Ubicación del cultivo</label>
 			<button @click="getLocation()">Obtener mi ubicación</button>
-			{{ lat }} , {{ lng }}
-			<div ref="mapContainer" style="width: 500px; height: 500px"></div>
+
+			<div>
+				Latitud: {{ lat }} , Longitud: {{ lng }}
+			</div>
+			<div class="flexbox-container">
+				<div ref="mapContainer" style="width: 500px; height: 500px;"></div>
+			</div>
+
+
+
 			<label>Área total del cultivo (metros cuadrados)</label>
 			<input type="number" v-model="state.area" placeholder="Área total del cultivo">
 			<label>Número de plantas a cultivar</label>
@@ -167,6 +175,47 @@ export default {
 };
 </script>
   
-<style></style>
+<style>
+.crop-register label {
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	font-size: larger;
+	width: 300px;
+	height: 40px;
+	display: block;
+	margin-bottom: 20px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.crop-register input {
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	font-size: larger;
+	width: 400px;
+	height: 40px;
+	padding-left: 20px;
+	display: block;
+	margin-bottom: 20px;
+	margin-right: auto;
+	margin-left: auto;
+	border: 1px solid mediumspringgreen;
+}
+
+.crop-register button {
+	color: aliceblue;
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	font-size: larger;
+	width: 320px;
+	height: 40px;
+	border: 1px solid mediumspringgreen;
+	background-color: mediumseagreen;
+	cursor: pointer;
+}
+
+.flexbox-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+</style>
   
   
