@@ -1,66 +1,58 @@
+<template>
+	<h1>Mazorcapp</h1>
+	<div>
+		<p>
+			<router-link to="/">Volver a Inicio</router-link>
+		</p>
+	</div>
+	<img alt="Vue logo" src="../assets/logo.png">
+	<h2>Registrar nuevo cultivo</h2>
+
+	<div class="register">
+		<p>
+			<label>Por favor rellene los siguientes campos:</label>
+		</p>
+
+		<form>
+
+			<label>Fecha de siembra del cultivo</label>
+			<input type="date" v-model="state.start_date" placeholder="Fecha de siembra del cultivo">
+
+			<label>Ubicación del cultivo</label>
+			<button @click="getLocation()">Obtener mi ubicación</button>
+
+			<div>
+				Latitud: {{ lat }} , Longitud: {{ lng }}
+			</div>
+			<div class="flexbox-container">
+				<div ref="mapContainer" style="width: 500px; height: 500px;"></div>
+			</div>
+
+
+
+			<label>Área total del cultivo (metros cuadrados)</label>
+			<input type="number" v-model="state.area" placeholder="Área total del cultivo">
+			<label>Número de plantas a cultivar</label>
+			<input type="number" v-model="state.plants_num" placeholder="Número de plantas a cultivar">
+			<label>Número de plantas por metro cuadrado</label>
+			<input type="number" v-model="state.plants_m2" placeholder="Número de plantas por metro cuadrado">
+		</form>
+
+		<div>
+			<button v-on:click="submitCrop">Guardar datos</button>
+		</div>
+	</div>
+</template>
+  
 <script>
+import { onMounted, ref, computed, reactive } from "vue";
 import useValidate from '@vuelidate/core'
 import { required, minLength, numeric, helpers } from '@vuelidate/validators'
+import L from "leaflet";
 import axios from 'axios';
-import { computed, reactive, ref } from 'vue';
-import L from 'leaflet';
-
-const lat = ref(0)
-const lng = ref(0)
-const map = ref()
-const mapContainer = ref()
-
-// eslint-disable-next-line no-unused-vars
-function getLocation() {
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition((position) => {
-			lat.value = position.coords.latitude
-			lng.value = position.coords.longitude
-			map.value.setView([lat.value, lng.value], 13);
-			
-			L.marker([lat.value, lng.value], {draggable: true})
-			.addTo(map.value)
-			.on("dragend", (event) => {
-				console.log(event)
-			});
-			
-			// Añadir evento para detección de click en el mapa
-			function onMapClick(e) {
-				alert("You clicked the map at " + e.latlng);
-			}
-			
-			map.value.on('click', onMapClick);
-		})
-	}
-}
-
-// Coordenadas de Sogamoso en OSM = [5,7148307, -72,9279328]
 
 export default {
-	name: 'CropNewForm',
-	data() {
-		return {
-			map: null,
-			latlng: [5,7148307, -72,9279328],
-			crop: {
-				start_date: '',
-				longitude: '',
-				latitude: '',
-				altitude: '',
-				area: '',
-				plants_num: '',
-				plants_m2: ''
-			}
-		};
-	},
-	mounted() {
-		map.value = L.map(mapContainer.value).setView([5,7148307, -72,9279328], 13);
-		L.tileLayer('https://tiles.opensnowmap.org/pistes/{z}/{x}/{y}.png', {
-			minZoom: 9,
-			maxZoom: 18,
-			attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors & ODbL, &copy; <a href="https://www.opensnowmap.org/iframes/data.html">www.opensnowmap.org</a> <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-		}).addTo(map.value);
-	},
+	name: "CropNew",
 	setup() {
 		const state = reactive({
 			start_date: '',
@@ -71,7 +63,7 @@ export default {
 			plants_num: '',
 			plants_m2: ''
 		})
-		
+
 		const rules = computed(() => {
 			return {
 				start_date: {
@@ -101,31 +93,55 @@ export default {
 				},
 			}
 		})
-		
+
 		const v$ = useValidate(rules, state)
-		
+
+		const lat = ref(0);
+		const lng = ref(0);
+		const map = ref();
+		const mapContainer = ref();
+
+		onMounted(() => {
+			map.value = L.map(mapContainer.value).setView([51.505, -0.09], 13);
+			L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+				maxZoom: 19,
+				attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
+			}).addTo(map.value);
+
+			// Obtener la ubicación del usuario
+			getLocation();
+		});
+
+		function getLocation() {
+			if (navigator.geolocation) {
+				navigator.geolocation.watchPosition((position) => {
+					lat.value = position.coords.latitude;
+					lng.value = position.coords.longitude;
+					map.value.setView([lat.value, lng.value], 13);
+
+					L.marker([lat.value, lng.value], { draggable: true })
+						.addTo(map.value)
+						.on("dragend", (event) => {
+							console.log(event);
+						});
+				});
+			}
+		}
+
 		return {
+			lat,
+			lng,
+			map,
+			mapContainer,
+			getLocation,
 			state,
 			v$
-		}
+		};
 	},
+
 	methods: {
-		startLeaftletGraph() {
-			// Inicialización del mapa
-			this.map.value = L.map('mapContainer', {
-				center: [5,7148307, -72,9279328],
-				zoom: 2
-			});
-			
-			// Añadir capa de tiles (OSM)
-			
-		},
-		onMapClick(e) {
-			this.state.latitude = e.latlng.lat;
-			this.state.longitude = e.latlng.lng;
-		},
 		submitCrop() {
-			if(!this.latlng) {
+			if (!this.latlng) {
 				alert('El cultivo requiere que su ubicación sea especificada en el mapa')
 			} else {
 				this.v$.$validate()
@@ -142,60 +158,23 @@ export default {
 					console.log('Hizo click en: Latitud: ${lat}; Longitud: ${lng}');
 					console.log(userCrop)
 					axios.post('http://localhost:3000/cropNew', userCrop)
-					.then(response => {
-						console.log('Cultivo registrado con éxito', response.data);
-						alert('Datos guardados con éxito')
-						this.$router.push({ name: 'CropNew' })
-					})
-					.catch(error => {
-						console.error(error);
-					});
+						.then(response => {
+							console.log('Cultivo registrado con éxito', response.data);
+							alert('Datos guardados con éxito')
+							this.$router.push({ name: 'CropNew' })
+						})
+						.catch(error => {
+							console.error(error);
+						});
 				} else {
 					alert('Datos no correctos')
 				}
 			}
 		}
 	}
-}
+};
 </script>
-
-<template>
-	<h1>MazorcApp</h1>
-	<div>
-		<p>
-			<router-link to="/">Volver a Inicio</router-link>
-		</p>
-	</div>
-	<img alt="Vue logo" src="../assets/logo.png">
-	<h2>Registrar nuevo cultivo</h2>
-	<div class="register">
-		<p>
-			<label>Por favor rellene los siguientes campos:</label>
-		</p>
-		
-		<form>
-			<label>Fecha de siembra del cultivo</label>
-			<input type="date" v-model="crop.start_date" placeholder="Fecha de siembra del cultivo">
-			
-			<!--<input type="text" v-model="crop.location" placeholder="Ubicación del cultivo">-->
-			<label>Ubicación del cultivo</label>
-			<div ref="mapContainer" style="width: 400px; height: 400px;"></div>
-			<button @click="getLocation()">Obtener ubicación</button>
-			
-			<label>Área total del cultivo (metros cuadrados)</label>
-			<input type="number" v-model="crop.area" placeholder="Área total del cultivo">
-			<label>Número de plantas a cultivar</label>
-			<input type="number" v-model="crop.plants_num" placeholder="Número de plantas a cultivar">
-			<label>Número de plantas por metro cuadrado</label>
-			<input type="number" v-model="crop.plants_m2" placeholder="Número de plantas por metro cuadrado">
-		</form>
-		
-		<div>
-			<button v-on:click="submitCrop">Guardar datos</button>
-		</div>
-	</div>
-</template>
-
+  
 <style>
 .crop-register label {
 	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -232,8 +211,11 @@ export default {
 	cursor: pointer;
 }
 
-#map {
-	width: 800px;
-	height: 600px;
+.flexbox-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 </style>
+  
+  
