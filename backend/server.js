@@ -121,7 +121,7 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.post('/cropNew', checkNotAuthenticated, async (req, res) => {
+app.post('/cropNew', async (req, res) => {
     console.log("Solicitud recibida de front")
     try {
         console.log(req.body)
