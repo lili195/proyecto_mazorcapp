@@ -211,4 +211,10 @@ export default {
     background-color: mediumseagreen;
     cursor: pointer;
 }
+
+.flexbox-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
