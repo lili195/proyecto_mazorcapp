@@ -15,8 +15,6 @@ const session = require('express-session')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
-const crops = []
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
