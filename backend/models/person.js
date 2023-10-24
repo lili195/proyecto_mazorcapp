@@ -39,8 +39,11 @@ const createPerson = async (
     console.log(newUser)
     return newUser
   } catch (error) {
-    console.log('NO SE PUDO PORQUE: ')
+    console.log('======================')
+    console.log('No se pudo porque: ')
+    console.log('======================')
     console.log(error)
+    console.log('======================')
     return error
   }
 }
@@ -54,20 +57,28 @@ function eliminarDiacriticos(texto) {
 }
 
 /**
- * Buscar una persona en la tabla people
+ * Validar que tanto el nombre como la contraseña de la persona
+ * esten en la tabla people
  */
- 
-const searchPerson = async (id_person) => {
+
+const validateLogin = async (id_person, password_person) => {
+  console.log('======================')
+  console.log(id_person)
+  console.log(password_person)
+  console.log('======================')
   try {
-    return await people.findOne({
-      where: { id_person: id_person }
-    })
+    
   } catch (error) {
+    console.log('======================')
+    console.log('Errorsito que da la db :/')
+    console.log('======================')
+
+    console.log(error)
     return error
   }
 }
 
 module.exports = {
   createPerson,
-  searchPerson
+  validateLogin,
 }
