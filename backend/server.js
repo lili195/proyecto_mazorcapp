@@ -1,5 +1,6 @@
 const { createPerson } = require('./models/person')
 const { people } = require('./config/db')
+const { createCrop } = require('./models/crop')
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
@@ -14,12 +15,7 @@ const session = require('express-session')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
-const initPassport = require('./passport-config')
-initPassport(passport,
-    cc => users.find(user => user.cc === cc)
-)
-
-const users = []
+const crops = []
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -122,6 +118,26 @@ app.post('/login', async (req, res) => {
             error: 'Ocurrió un error al procesar la solicitud',
         });
 
+    }
+})
+
+app.post('/cropNew', checkNotAuthenticated, async (req, res) => {
+    console.log("Solicitud recibida de front")
+    try {
+        console.log(req.body)
+        createCrop(
+            req.body.id_crop,
+            req.body.start_date,
+            req.body.latitude,
+            req.body.longitude,
+            req.body.altitude,
+            req.body.area,
+            req.body.plants_num,
+            req.body.plants_m2
+        )
+        res.status(201).send('Cultivo registrado con éxito');
+    } catch {
+        res.status(400).send('Error en solicitud');
     }
 })
 
