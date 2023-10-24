@@ -10,10 +10,10 @@
         </p>
 
         <p>
-        <input type="text" id="cc" v-model="state.cc" placeholder="Número de Cédula *" />
-        <span v-if="v$.cc.$error">
-            {{ v$.cc.$errors[0].$message }}
-        </span>
+            <input type="text" id="cc" v-model="state.cc" placeholder="Número de Cédula *" />
+            <span v-if="v$.cc.$error">
+                {{ v$.cc.$errors[0].$message }}
+            </span>
         </p>
 
         <p>
@@ -55,7 +55,8 @@
         </p>
 
         <p>
-            <span class="label password" style="margin-right:170px; font-size: large;">Porfavor confirme la contraseña</span>
+            <span class="label password" style="margin-right:170px; font-size: large;">Porfavor confirme la
+                contraseña</span>
         </p>
 
         <p>
@@ -169,7 +170,7 @@ export default {
 
 <style>
 .register label {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: KoHo, sans-serif;
     font-size: larger;
     width: 300px;
     height: 40px;
@@ -180,7 +181,7 @@ export default {
 }
 
 .register input {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: KoHo, sans-serif;
     font-size: larger;
     width: 400px;
     height: 40px;
@@ -194,7 +195,7 @@ export default {
 
 .register button {
     color: aliceblue;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: KoHo, sans-serif;
     font-size: larger;
     width: 320px;
     height: 40px;

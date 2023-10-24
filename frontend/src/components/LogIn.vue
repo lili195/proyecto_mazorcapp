@@ -108,7 +108,7 @@ export default {
 
 <style>
 .login label {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: KoHo, sans-serif;
     font-size: larger;
     width: 300px;
     height: 40px;
@@ -119,7 +119,7 @@ export default {
 }
 
 .login input {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: KoHo, sans-serif;
     font-size: larger;
     width: 300px;
     height: 40px;
@@ -133,7 +133,7 @@ export default {
 
 .login button {
     color: aliceblue;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: KoHo, sans-serif;
     font-size: larger;
     width: 320px;
     height: 40px;
