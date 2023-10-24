@@ -83,9 +83,9 @@ import { required, minLength, maxLength, sameAs, numeric, helpers } from '@vueli
 import axios from 'axios';
 import { computed, reactive } from 'vue';
 
-
 export default {
     name: 'RegisterForm',
+    
     setup() {
         const state = reactive({
             cc: '',
@@ -111,7 +111,7 @@ export default {
                 cc: {
                     required: helpers.withMessage('Debe ingresar su cédula', required),
                     minLength: helpers.withMessage('La cédula debe ser de al menos 7 dígitos', minLengthCC),
-                    numeric: helpers.withMessage('Debe ingresar un número de cédula', numeric),
+                    numeric: helpers.withMessage('Debe ingresar dígitos numéricos', numeric),
                     maxLength: helpers.withMessage('Máximo 10 dígitos', maxLengthCC)
                 },
                 name: { required: helpers.withMessage('Debe ingresar su nombre', required) },
@@ -151,7 +151,6 @@ export default {
                     number: this.state.number,
                     password: this.state.password.password,
                 };
-                console.log(userData)
                 axios.post('http://localhost:3000/register', userData)
                     .then(response => {
                         console.log(response.data);
