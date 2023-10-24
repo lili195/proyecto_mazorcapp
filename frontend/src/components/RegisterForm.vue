@@ -155,7 +155,7 @@ export default {
                     .then(response => {
                         console.log(response.data);
                         alert('Datos guardados con éxito')
-                        this.$router.push({ name: 'SessionPage' })
+                        this.$router.push('/login');
                     }, err => {
                         console.log(err.response)
                         this.state.error = err.response.data.error
