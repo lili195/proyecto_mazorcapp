@@ -94,8 +94,8 @@ export default {
 				},
 			}
 		})
-    
-    const v$ = useValidate(rules, state)
+
+		const v$ = useValidate(rules, state)
 
 		const lat = ref(0);
 		const lng = ref(0);
@@ -178,37 +178,37 @@ export default {
   
 <style>
 .crop-register label {
-    font-family: KoHo, sans-serif;
-    font-size: larger;
-    width: 400px;
-    height: 20px;
-    display: block;
-    margin-bottom: 5px;
-    margin-right: auto;
-    margin-left: auto;
+	font-family: KoHo, sans-serif;
+	font-size: larger;
+	width: 400px;
+	height: 20px;
+	display: block;
+	margin-bottom: 5px;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 .crop-register input {
-    font-family: KoHo, sans-serif;
-    font-size: larger;
-    width: 400px;
-    height: 40px;
-    padding-left: 20px;
-    display: block;
-    margin-bottom: 20px;
-    margin-right: auto;
-    margin-left: auto;
-    border: 1px solid mediumspringgreen;
+	font-family: KoHo, sans-serif;
+	font-size: larger;
+	width: 400px;
+	height: 40px;
+	padding-left: 20px;
+	display: block;
+	margin-bottom: 20px;
+	margin-right: auto;
+	margin-left: auto;
+	border: 1px solid mediumspringgreen;
 }
 
 .crop-register button {
-    color: aliceblue;
-    font-family: KoHo, sans-serif;
-    font-size: larger;
-    width: 320px;
-    height: 40px;
-    border: 1px solid mediumspringgreen;
-    background-color: mediumseagreen;
-    cursor: pointer;
+	color: aliceblue;
+	font-family: KoHo, sans-serif;
+	font-size: larger;
+	width: 320px;
+	height: 40px;
+	border: 1px solid mediumspringgreen;
+	background-color: mediumseagreen;
+	cursor: pointer;
 }
 </style>
