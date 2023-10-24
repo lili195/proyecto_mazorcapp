@@ -10,7 +10,6 @@ const lng = ref(0)
 const map = ref()
 const mapContainer = ref()
 
-// eslint-disable-next-line no-unused-vars
 function getLocation() {
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition((position) => {
@@ -110,49 +109,31 @@ export default {
 		}
 	},
 	methods: {
-		startLeaftletGraph() {
-			// Inicialización del mapa
-			this.map.value = L.map('mapContainer', {
-				center: [5,7148307, -72,9279328],
-				zoom: 2
-			});
-			
-			// Añadir capa de tiles (OSM)
-			
-		},
-		onMapClick(e) {
-			this.state.latitude = e.latlng.lat;
-			this.state.longitude = e.latlng.lng;
-		},
 		submitCrop() {
-			if(!this.latlng) {
-				alert('El cultivo requiere que su ubicación sea especificada en el mapa')
+			this.v$.$validate()
+			if (!this.v$.$error) {
+				const userCrop = {
+					start_date: this.state.start_date,
+					longitude: this.state.longitude,
+					latitude: this.state.latitude,
+					altitude: this.state.altitude,
+					area: this.state.area,
+					plants_num: this.state.plants_num,
+					plants_m2: this.state.plants_m2,
+				};
+				console.log('Hizo click en: Latitud: ${lat}; Longitud: ${lng}');
+				console.log(userCrop)
+				axios.post('http://localhost:3000/cropNew', userCrop)
+				.then(response => {
+					console.log('Cultivo registrado con éxito', response.data);
+					alert('Datos guardados con éxito')
+					this.$router.push({ name: 'CropNew' })
+				})
+				.catch(error => {
+					console.error(error);
+				});
 			} else {
-				this.v$.$validate()
-				if (!this.v$.$error) {
-					const userCrop = {
-						start_date: this.state.start_date,
-						longitude: this.state.longitude,
-						latitude: this.state.latitude,
-						altitude: this.state.altitude,
-						area: this.state.area,
-						plants_num: this.state.plants_num,
-						plants_m2: this.state.plants_m2,
-					};
-					console.log('Hizo click en: Latitud: ${lat}; Longitud: ${lng}');
-					console.log(userCrop)
-					axios.post('http://localhost:3000/cropNew', userCrop)
-					.then(response => {
-						console.log('Cultivo registrado con éxito', response.data);
-						alert('Datos guardados con éxito')
-						this.$router.push({ name: 'CropNew' })
-					})
-					.catch(error => {
-						console.error(error);
-					});
-				} else {
-					alert('Datos no correctos')
-				}
+				alert('Datos no correctos')
 			}
 		}
 	}
@@ -230,10 +211,5 @@ export default {
 	border: 1px solid mediumspringgreen;
 	background-color: mediumseagreen;
 	cursor: pointer;
-}
-
-#map {
-	width: 800px;
-	height: 600px;
 }
 </style>
