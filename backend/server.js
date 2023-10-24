@@ -14,13 +14,6 @@ const session = require('express-session')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
-const initPassport = require('./passport-config')
-initPassport(passport,
-    cc => users.find(user => user.cc === cc)
-)
-
-const users = []
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
