@@ -121,7 +121,7 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.post('/cropNew', checkNotAuthenticated, async (req, res) => {
+app.post('/cropNew', async (req, res) => {
     console.log("Solicitud recibida de front")
     try {
         console.log(req.body)
@@ -149,7 +149,6 @@ app.post('/cropNew', checkNotAuthenticated, async (req, res) => {
 // })
 
 const { conn } = require('./config/db')
-const person = require('./entities/person')
 
 // colocar true para pruebas (reiniciar la base de datos)
 conn.sync({ force: false }).then(async () => {
