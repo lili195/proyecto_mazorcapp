@@ -5,15 +5,30 @@
         <p>
             <label>Por favor ingrese su número de cédula y su contraseña</label>
         </p>
-
         <p>
-            <input type="text" v-model="loginForm.cc" placeholder="Cédula">
+            <span class="label cc" style="margin-right:90px; font-size: large;">Ingrese su número de cédula</span>
+        </p>
+        <p>
+            <input type="text" v-model="state.cc" placeholder="Cédula">
+            <span v-if="v$.cc.$error">
+                {{ v$.cc.$errors[0].$message }}
+            </span>
         </p>
 
         <p>
-            <input type="password" v-model="loginForm.password" placeholder="Contraseña">
+            <span class="label cc" style="margin-right:140px; font-size: large;">Ingrese su contraseña</span>
+        </p>
+
+        <p>
+            <input type="password" v-model="state.password" placeholder="Contraseña">
+            <span v-if="v$.password.$error">
+                {{ v$.password.$errors[0].$message }}
+            </span>
         </p>
         <button v-on:click="login">Iniciar sesión</button>
+        <p>
+            <span style="color: red; font-size: larger;">{{ state.error }}</span>
+        </p>
     </div>
     <p>
         <router-link to="/register">Aún no tiene una cuenta?</router-link>
@@ -27,34 +42,64 @@
 </template>
 
 <script>
+import useValidate from '@vuelidate/core'
+import { computed, reactive } from 'vue';
+import { required, minLength, maxLength, numeric, helpers } from '@vuelidate/validators'
 import axios from 'axios';
 
 export default {
     name: 'LogIn',
-    data() {
-        return {
-            loginForm: {
-                cc: null,
-                password: null
+
+    setup() {
+        const state = reactive({
+            cc: null,
+            password: null,
+            error: ''
+        })
+
+        const minLengthCC = minLength(7)
+        const minLengthPassword = minLength(6)
+        const maxLengthCC = maxLength(10)
+
+        const rules = computed(() => {
+            return {
+                cc: {
+                    required: helpers.withMessage('Debe ingresar su cédula', required),
+                    minLength: helpers.withMessage('La cédula debe ser de al menos 7 dígitos', minLengthCC),
+                    numeric: helpers.withMessage('Debe ingresar un digitos numericos', numeric),
+                    maxLength: helpers.withMessage('Máximo 10 dígitos', maxLengthCC)
+                },
+                password: {
+                    required: helpers.withMessage('Debe ingresar su contraseña', required),
+                    minLength: helpers.withMessage('La constraseña debe ser de al menos 6 caracteres', minLengthPassword)
+                }
             }
+        })
+
+        const v$ = useValidate(rules, state)
+
+        return {
+            state,
+            v$
         }
     },
     methods: {
         async login() {
-            try {
-                const response = await axios.post('http://localhost:3000/login', {
-                    cc: this.loginForm.cc,
-                    password: this.loginForm.password,
-                });
-
-                const token = response.data.token;
-                localStorage.setItem('token', token);
-
-                // Redirect to the home page
-                this.$router.push('/');
-            } catch (error) {
-                console.error('Error en el inicio de sesión:', error);
-                alert('Error en el inicio de sesión');
+            this.v$.$validate()
+            if (!this.v$.$error) {
+                axios.post('http://localhost:3000/login', {
+                    cc: this.state.cc,
+                    password: this.state.password,
+                }).then((response) => {
+                        console.log(response.data);
+                        localStorage.setItem('token', response.data.token)
+                        this.$router.push('/session');
+                    }).catch((err) => {
+                        console.log(err.response)
+                        this.state.error = err.response.data.error
+                    })
+            } else {
+                alert('No fue posible iniciar sesión :(')
             }
         }
     }
@@ -62,6 +107,17 @@ export default {
 </script>
 
 <style>
+.login label {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: larger;
+    width: 300px;
+    height: 40px;
+    display: block;
+    margin-bottom: 20px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
 .login input {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: larger;

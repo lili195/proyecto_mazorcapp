@@ -39,24 +39,27 @@ app.use(cors({
     credentials: true
 }))
 
-app.post('/register', checkNotAuthenticated, async (req, res) => {
+app.post('/register', async (req, res) => {
     console.log('solicitud recibida de front :)')
     try {
-        // buscar cc en la db
         const existingPerson = await people.findOne({
             where: {
                 id_person: req.body.cc,
             },
         });
-        // si ya existe, se envía el error
+        // si ya existe la cc en la db, se envía el error
         if (existingPerson) {
+
+            console.log('======================')
             console.log('El número de cédula ya está en uso')
+            console.log('======================')
+
             res.status(400).json({
                 title: 'Error de validación',
                 error: 'El número de cédula ya está en uso',
             });
         } else {
-        // Registro exitoso
+            // Registro exitoso
             await createPerson(
                 req.body.cc,
                 req.body.name,
@@ -82,6 +85,46 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
     }
 })
 
+app.post('/login', async (req, res) => {
+    try {
+        const personFound = await people.findOne({
+            where: {
+                id_person: req.body.cc,
+            },
+        });
+
+        // si no existe la cc en la db, se envía el error
+        if (!personFound) {
+            console.log('usuario no encontrado')
+            return res.status(401).json({
+                title: 'Error de credenciales',
+                error: 'Usuario no encontrado'
+            })
+        } else if (!bcrypt.compareSync(req.body.password, personFound.password_person)) {
+            console.log('contraseña incorrecta')
+            return res.status(400).json({
+                title: 'Error de credenciales',
+                error: 'Contraseña incorrecta',
+            });
+        } else {
+            console.log('Inicio de sesion exitoso')
+            let token = jwt.sign({ id_person: personFound.id_person}, 'secretkey');
+            return res.status(200).json({
+                title: 'Login exitoso',
+                token: token
+            })
+        }
+    } catch (error) {
+        // Otro tipo de error
+        console.log(error)
+        res.status(500).json({
+            title: 'Error interno del servidor',
+            error: 'Ocurrió un error al procesar la solicitud',
+        });
+
+    }
+})
+
 // app.delete('/logout', (req, res) => {
 //     req.logOut(req.user, err => {
 //         if (err) return next(err);
@@ -89,24 +132,11 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
 //     })
 // })
 
-function checkAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next()
-    }
-    res.redirect('/login')
-}
-
-function checkNotAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return res.redirect('/')
-    }
-    next()
-}
-
 const { conn } = require('./config/db')
+const person = require('./entities/person')
 
 // colocar true para pruebas (reiniciar la base de datos)
-conn.sync({ force: true }).then(async () => {
+conn.sync({ force: false }).then(async () => {
     app.listen(3000, () => {
         console.log(`%s listening at 3000`) // eslint-disable-line no-console
     })
