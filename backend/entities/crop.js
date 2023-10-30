@@ -1,12 +1,12 @@
 const { DataTypes } = require('sequelize')
-const person = require('./person')
 
 module.exports = (sequelize) => {
 	sequelize.define('crops', {
 		id_crop: {
-			type: DataTypes.STRING,
+			type: DataTypes.INTEGER,
 			allowNull: false,
-			primaryKey: true
+			primaryKey: true,
+			autoIncrement: true,
 		},
 		state_crop: {
 			type: DataTypes.ENUM('A', 'F'),

@@ -124,11 +124,10 @@ app.post('/cropNew', async (req, res) => {
     try {
         console.log(req.body)
         createCrop(
-            req.body.id_crop,
+            'A',
             req.body.start_date,
             req.body.latitude,
             req.body.longitude,
-            req.body.altitude,
             req.body.area,
             req.body.plants_num,
             req.body.plants_m2
