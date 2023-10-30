@@ -10,32 +10,59 @@
 
 	<div class="register">
 		<p>
-			<label>Por favor rellene los siguientes campos:</label>
+			<label><b>Por favor rellene los siguientes campos:</b></label>
 		</p>
 
 		<form>
-
-			<label>Fecha de siembra del cultivo</label>
-			<input type="date" v-model="state.start_date" placeholder="Fecha de siembra del cultivo">
-
-			<label>Ubicación del cultivo</label>
-			<button @click="getLocation()">Obtener mi ubicación</button>
-
 			<div>
-				Latitud: {{ lat }} , Longitud: {{ lng }}
+				<div>
+					<label>
+						Permita que rastreemos su ubicación para el cultivo que desea registrar antes de continuar.
+					</label>
+				</div>
+				<br>
+				<button @click="getLocation()">Obtener mi ubicación</button>
+
+				<div>
+					Latitud: {{ lat }} , Longitud: {{ lng }}
+				</div>
+				<div class="flexbox-container">
+					<div ref="mapContainer" style="width: 500px; height: 500px;"></div>
+				</div>
 			</div>
-			<div class="flexbox-container">
-				<div ref="mapContainer" style="width: 500px; height: 500px;"></div>
-			</div>
 
+			<p>
+				<label>Fecha de siembra del cultivo</label>
+				<input type="date" v-model="state.start_date" placeholder="Fecha de siembra del cultivo">
+				<span v-if="v$.start_date.$error">
+					{{ v$.start_date.$errors[0].$message }}
+				</span>
+			</p>
 
+			<p>
+				<label>Área total del cultivo (metros cuadrados)</label>
+				<input type="number" v-model="state.area" placeholder="Área total del cultivo">
+				<span v-if="v$.area.$error">
+					{{ v$.area.$errors[0].$message }}
+				</span>
+			</p>
 
-			<label>Área total del cultivo (metros cuadrados)</label>
-			<input type="number" v-model="state.area" placeholder="Área total del cultivo">
-			<label>Número de plantas a cultivar</label>
-			<input type="number" v-model="state.plants_num" placeholder="Número de plantas a cultivar">
-			<label>Número de plantas por metro cuadrado</label>
-			<input type="number" v-model="state.plants_m2" placeholder="Número de plantas por metro cuadrado">
+			<p>
+				<label>Número de plantas a cultivar</label>
+				<input type="number" v-model="state.plants_num" placeholder="Número de plantas a cultivar">
+				<span v-if="v$.plants_num.$error">
+					{{ v$.plants_num.$errors[0].$message }}
+				</span>
+			</p>
+
+			<p>
+				<label>Número de plantas por metro cuadrado</label>
+				<input type="number" v-model="state.plants_m2" placeholder="Número de plantas por metro cuadrado">
+				<span v-if="v$.plants_m2.$error">
+					{{ v$.plants_m2.$errors[0].$message }}
+				</span>
+			</p>
+
 		</form>
 
 		<div>
@@ -47,9 +74,9 @@
 <script>
 import { onMounted, ref, computed, reactive } from "vue";
 import useValidate from '@vuelidate/core'
-import { required, minLength, numeric, helpers } from '@vuelidate/validators'
+import { required, minLength, helpers } from '@vuelidate/validators'
 import L from "leaflet";
-import axios from 'axios';
+//import axios from 'axios';
 
 export default {
 
@@ -59,7 +86,6 @@ export default {
 			start_date: '',
 			longitude: '',
 			latitude: '',
-			altitude: '',
 			area: '',
 			plants_num: '',
 			plants_m2: ''
@@ -68,25 +94,15 @@ export default {
 		const rules = computed(() => {
 			return {
 				start_date: {
-					required: helpers.withMessage('Fecha inválida', required),
-					minLength: minLength(10), numeric
-				},
-				longitude: {
-					required: helpers.withMessage('Localidad requerida', required)
-				},
-				latitude: {
-					required: helpers.withMessage('Localidad requerida', required)
-				},
-				altitude: {
-					required: helpers.withMessage('Localidad requerida', required)
+					required: helpers.withMessage('Porfavor elija una fecha de inicio de siembra', required),
 				},
 				area: {
 					required: helpers.withMessage('Por favor indique el área de su cultivo (metros cuadrados)', required),
-					minLength: minLength(5)
+					minLength: minLength(1)
 				},
 				plants_num: {
 					required: helpers.withMessage('Número de plantas no válido', required),
-					minLength: minLength(3)
+					minLength: minLength(1)
 				},
 				plants_m2: {
 					required: helpers.withMessage('Número de plantas por m2 no válido', required),
@@ -142,27 +158,25 @@ export default {
 
 	methods: {
 		submitCrop() {
-			if (!this.latlng) {
+			if (!this.lat || !this.lng) {
 				alert('El cultivo requiere que su ubicación sea especificada en el mapa')
 			} else {
 				this.v$.$validate()
 				if (!this.v$.$error) {
 					const userCrop = {
 						start_date: this.state.start_date,
-						longitude: this.state.longitude,
-						latitude: this.state.latitude,
-						altitude: this.state.altitude,
+						longitude: this.lng,
+						latitude: this.lat,
 						area: this.state.area,
 						plants_num: this.state.plants_num,
 						plants_m2: this.state.plants_m2,
 					};
-					console.log('Hizo click en: Latitud: ${lat}; Longitud: ${lng}');
 					console.log(userCrop)
 					axios.post('http://localhost:3000/cropNew', userCrop)
 						.then(response => {
 							console.log('Cultivo registrado con éxito', response.data);
 							alert('Datos guardados con éxito')
-							this.$router.push({ name: 'CropNew' })
+							this.$router.push({ name: 'followGrowth' })
 						})
 						.catch(error => {
 							console.error(error);
@@ -213,8 +227,8 @@ export default {
 }
 
 .flexbox-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 </style>
