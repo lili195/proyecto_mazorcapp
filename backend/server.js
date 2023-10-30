@@ -139,12 +139,9 @@ app.post('/cropNew', async (req, res) => {
     }
 })
 
-// app.delete('/logout', (req, res) => {
-//     req.logOut(req.user, err => {
-//         if (err) return next(err);
-//         res.redirect("/");
-//     })
-// })
+app.post('/session', async (req, res)=> {
+    
+})
 
 const { conn } = require('./config/db')
 
