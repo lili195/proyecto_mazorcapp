@@ -1,44 +1,32 @@
 const { Sequelize, Op } = require('sequelize')
-const modelPerson = require('../entities/person.js')
-const modelCrop = require('../entities/crop.js')
+const modelPeople = require('../entities/person.js')
+const modelCrops = require('../entities/crop.js')
 
 const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: './database.sqlite'
-  });
-
-//const { DB_USER, DB_PASSWORD, DB_HOST } = process.env
-// process.env.DATABASE_URL ||
-/**const sequelize = new Sequelize(
-  process.env.DATABASE_URL || `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/marketplace`,
-  {
-    logging: false,
-    // native: false,
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
-    }
-  }
-)*/
+  dialect: 'sqlite',
+  storage: './database.sqlite'
+});
 
 /**
- * Create models in database
+ * Crear los modelos en la db
  */
-modelPerson(sequelize)
-modelCrop(sequelize)
+modelPeople(sequelize)
+modelCrops(sequelize)
 
 /**
- * create relationship
+ * crear las relaciones
  */
-const {
-  people
-} = sequelize.models
 
-const {
-  crop
-} = sequelize.models
+
+
+// modelCrops.belongsTo(modelPeople, { foreignKey: 'id_person' });
+
+// const people = sequelize.define('people')
+
+// const crops = sequelize.define('crops')
+
+// crops.belongsTo(people)
+// people.hasMany(crops)
 
 // collection.belongsTo(category)
 // category.hasMany(collection)

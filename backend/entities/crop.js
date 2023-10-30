@@ -1,37 +1,38 @@
 const { DataTypes } = require('sequelize')
+const person = require('./person')
 
 module.exports = (sequelize) => {
-	sequelize.define('crop', {
+	sequelize.define('crops', {
 		id_crop: {
 			type: DataTypes.STRING,
 			allowNull: false,
 			primaryKey: true
 		},
-		start_date: {
+		state_crop: {
+			type: DataTypes.ENUM('A', 'F'),
+			allowNull: false,
+		},
+		start_date_crop: {
 			type: DataTypes.STRING,
 			allowNull: false
 		},
-		latitude: {
+		latitude_crop: {
 			type: DataTypes.STRING,
 			allowNull: false
 		},
-		longitude: {
+		longitude_crop: {
 			type: DataTypes.STRING,
 			allowNull: false
 		},
-		altitude: {
-			type: DataTypes.STRING,
-			allowNull: false
-		},
-		area: {
+		area_crop: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		plants_num: {
+		plants_totalNum_crop: {
 			type: DataTypes.STRING,
 			allowNull: false
 		},
-		plants_m2: {
+		plants_perM2_crop: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		}

@@ -56,29 +56,6 @@ function eliminarDiacriticos(texto) {
   return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }
 
-/**
- * Validar que tanto el nombre como la contraseña de la persona
- * esten en la tabla people
- */
-
-const validateLogin = async (id_person, password_person) => {
-  console.log('======================')
-  console.log(id_person)
-  console.log(password_person)
-  console.log('======================')
-  try {
-    
-  } catch (error) {
-    console.log('======================')
-    console.log('Errorsito que da la db :/')
-    console.log('======================')
-
-    console.log(error)
-    return error
-  }
-}
-
 module.exports = {
-  createPerson,
-  validateLogin,
+  createPerson
 }

@@ -5,7 +5,6 @@ const createCrop = async (
 	start_date,
 	latitude,
 	longitude,
-	altitude,
 	area,
 	plants_num,
 	plants_m2
@@ -16,7 +15,6 @@ const createCrop = async (
 				start_date,
 				latitude,
 				longitude,
-				altitude,
 				area,
 				plants_num,
 				plants_m2)
@@ -29,7 +27,6 @@ const createCrop = async (
 					start_date,
 					latitude,
 					longitude,
-					altitude,
 					area,
 					plants_num,
 					plants_m2
