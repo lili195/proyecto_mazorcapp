@@ -76,7 +76,7 @@ import { onMounted, ref, computed, reactive } from "vue";
 import useValidate from '@vuelidate/core'
 import { required, minLength, helpers } from '@vuelidate/validators'
 import L from "leaflet";
-//import axios from 'axios';
+import axios from 'axios';
 
 export default {
 
