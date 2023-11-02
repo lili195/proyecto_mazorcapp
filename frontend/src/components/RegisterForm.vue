@@ -73,7 +73,7 @@
 
     <div>
         <p>
-            <router-link to="/">Volver a Inicio</router-link>
+            <router-link to="/session">Volver a Inicio</router-link>
         </p>
     </div>
 </template>
