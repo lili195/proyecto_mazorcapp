@@ -14,6 +14,7 @@ const flash = require('express-flash')
 const session = require('express-session')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const twilio = require('twilio')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -141,6 +142,17 @@ app.post('/cropNew', async (req, res) => {
 app.post('/session', async (req, res)=> {
     
 })
+
+async function sendSMS() {
+    const client = new twilio(process.env.TWILIO_SID, process.env.TWILIO_AUHT_TOKEN)
+    client.messages
+    .create({
+       body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
+       from: '+1 650 513 8945',
+       to: process.env.PHONE_NUM
+     })
+    .then(message => console.log(message.sid));
+}
 
 const { conn } = require('./config/db')
 
