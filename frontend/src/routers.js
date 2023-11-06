@@ -4,6 +4,7 @@ import LogIn from "./components/LogIn.vue";
 import SessionPage from "./components/SessionPage";
 import CropNew from "./components/CropNew.vue";
 import FollowGrowth from "./components/FollowGrowth.vue";
+import PasswordReset from "./components/PasswordReset.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
@@ -37,6 +38,11 @@ const routes = [
     component: FollowGrowth,
     path: "/followGrowth",
   },
+  {
+    name: "PasswordReset",
+    component: PasswordReset,
+    path: "/passwordReset"
+  }
 ];
 
 const router = createRouter({

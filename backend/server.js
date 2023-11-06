@@ -80,6 +80,26 @@ app.post('/register', async (req, res) => {
     }
 })
 
+app.post('/resetPass', async(req, res) => {
+    console.log('solicitud de cambio de contraseña recibida de front :)')
+    try {
+        const existingNum = await people.findOne({
+            where: {
+                number_person: req.body.num,
+            },
+        });
+
+        if (existingNum) {
+            res.status(200).json({
+                title: 'Número encontrado',
+            });
+        }
+    } catch (error) {
+        
+    }
+
+})
+
 app.post('/login', async (req, res) => {
     try {
         const personFound = await people.findOne({
@@ -143,15 +163,18 @@ app.post('/session', async (req, res)=> {
     
 })
 
+
+
 async function sendSMS() {
     const client = new twilio(process.env.TWILIO_SID, process.env.TWILIO_AUHT_TOKEN)
     client.messages
     .create({
-       body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
-       from: '+1 650 513 8945',
+       body: 'Hola mensaje de prueba no 1',
+       from: '+16505138945',
        to: process.env.PHONE_NUM
      })
-    .then(message => console.log(message.sid));
+    .then(message => {console.log(message.sid, 'Mensaje enviado!')})
+    .catch(err => {console.log(err, 'Mensaje NO enviado :[')} )
 }
 
 const { conn } = require('./config/db')

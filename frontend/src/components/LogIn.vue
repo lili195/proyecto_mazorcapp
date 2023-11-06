@@ -31,6 +31,9 @@
         </p>
     </div>
     <p>
+        <router-link to="/passwordReset">Olvidó su contraseña?</router-link>
+    </p>
+    <p>
         <router-link to="/register">Aún no tiene una cuenta?</router-link>
     </p>
 
@@ -49,7 +52,6 @@ import axios from 'axios';
 
 export default {
     name: 'LogIn',
-
     setup() {
         const state = reactive({
             cc: null,
@@ -66,7 +68,7 @@ export default {
                 cc: {
                     required: helpers.withMessage('Debe ingresar su cédula', required),
                     minLength: helpers.withMessage('La cédula debe ser de al menos 7 dígitos', minLengthCC),
-                    numeric: helpers.withMessage('Debe ingresar un digitos numericos', numeric),
+                    numeric: helpers.withMessage('Debe ingresar dígitos numericos', numeric),
                     maxLength: helpers.withMessage('Máximo 10 dígitos', maxLengthCC)
                 },
                 password: {
