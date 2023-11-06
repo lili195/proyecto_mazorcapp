@@ -1,4 +1,5 @@
 <template>
+    <Navbar />
     <img alt="Vue logo" src="../assets/logo.png">
     <h2>Registrarme</h2>
     <div class="register">
@@ -81,10 +82,13 @@ import useValidate from '@vuelidate/core'
 import { required, minLength, maxLength, sameAs, numeric, helpers } from '@vuelidate/validators'
 import axios from 'axios';
 import { computed, reactive } from 'vue';
+import Navbar from './Navbar.vue';
 
 export default {
     name: 'RegisterForm',
-    
+    components() {
+        Navbar
+    },
     setup() {
         const state = reactive({
             cc: '',

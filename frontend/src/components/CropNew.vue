@@ -1,11 +1,5 @@
 <template>
-	<h1>Mazorcapp</h1>
-	<div>
-		<p>
-			<router-link to="/">Volver a Inicio</router-link>
-		</p>
-	</div>
-	<img alt="Vue logo" src="../assets/logo.png">
+	<Navbar />
 	<h2>Registrar nuevo cultivo</h2>
 
 	<div class="register">
@@ -42,9 +36,13 @@ import useValidate from '@vuelidate/core'
 import { required, minLength, numeric, helpers } from '@vuelidate/validators'
 import L from "leaflet";
 import axios from 'axios';
+import Navbar from './Navbar.vue';
 
 export default {
 	name: "CropNew",
+	components() {
+		Navbar
+	},
 	setup() {
 		const state = reactive({
 			start_date: '',
