@@ -1,4 +1,28 @@
 <template>
+	<v-container>
+        <v-row align="center" justify="center">
+            <v-col cols="12" sm="10">
+                <v-row>
+                    <v-col cols="12">
+                        <div style="text-align: center">
+                            <v-img :src="require('../assets/mazorcapp_banner.png')" class="my-3" contain height="50" />
+                        </div>
+                    </v-col>
+                </v-row>
+                <v-row justify="center" align="center">
+                    <v-col cols="auto">
+                        <v-btn to="/" density="compact" variant="text">Inicio</v-btn>
+                    </v-col>
+                    <v-col cols="auto">
+                        <v-btn to="/cropNew" density="compact" variant="text">Registrar cultivo</v-btn>
+                    </v-col>
+                    <v-col cols="auto">
+                        <v-btn to="/followGrowth" density="compact" variant="text">Añadir descripción</v-btn>
+                    </v-col>
+                </v-row>
+            </v-col>
+        </v-row>
+    </v-container>
 	<img alt="Vue logo" src="../assets/logo.png">
 	<h1>MazorcApp</h1>
 	<div class="nav">
@@ -10,7 +34,7 @@
 				<router-link to="/cropNew">Registrar cultivo</router-link>
 			</li>
 			<li>
-				<router-link to="/">Añadir descripción</router-link>
+				<router-link to="/followGrowth">Añadir descripción</router-link>
 			</li>
 			<li>
 				<router-link to="/login">Iniciar sesión</router-link>
@@ -23,55 +47,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import HomePage from "./HomePage.vue";
-import RegisterForm from "./RegisterForm.vue";
-import LogIn from "./LogIn.vue";
-import SessionPage from "./SessionPage.vue"
-import CropNew from "./CropNew.vue";
-
-Vue.use(VueRouter);
-
-/*const HomePage = { template: '<div>Inicio</div>'}
-const CropNew = { template: '<div>Registrar cultivo</div>'}
-const Description = { template: '<div>Añadir descripción</div>'}
-const Login = { template: '<div>Iniciar sesión</div>'}
-const RegisterForm = { template: '<div>Registrarse</div>'}*/
-
-const routes = [
-{
-	path: '/',
-	component: HomePage,
-},
-{
-	path: '/login',
-	component: LogIn,
-},
-{
-	path: '/register',
-	component: RegisterForm,
-},
-{
-	path: '/session',
-	component: SessionPage,
-},
-{
-	path: '/cropNew',
-	component: CropNew,
-}
-];
-
-const router = VueRouter.createRouter({
-	history: VueRouter.createWebHashHistory(),
-	routes,
-});
-
-const app = Vue.createApp({})
-app.use(router)
-
-app.mount('#app')
-
 export default {
 	name: 'MyNavbar'
 }

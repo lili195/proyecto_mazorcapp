@@ -30,6 +30,11 @@ const routes = [
         name: 'CropNew',
         component: CropNew,
         path: '/cropNew'
+    },
+    {
+        name: 'FollowGrowth',
+        component: CropNew,
+        path: '/followGrowth'
     }
 ];
 
