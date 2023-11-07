@@ -33,9 +33,9 @@
                                         <v-row align="center" justify="center">
                                             <v-col cols="12" sm="8">
                                                 <v-text-field label="Cédula" outlined dense color="#3CB371"
-                                                    autocomplete="false" class="mt-16"></v-text-field>
+                                                    autocomplete="false" class="mt-16" v-model = "state.cc"></v-text-field>
                                                 <v-text-field label="Contraseña" outlined dense color="#3CB371"
-                                                    autocomplete="false" v-model="password"
+                                                    autocomplete="false" v-model="state.password"
                                                     :type="showPassword ? 'text' : 'password'"
                                                     :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                                                     @click:append="togglePasswordVisibility"></v-text-field>
