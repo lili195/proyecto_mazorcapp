@@ -138,7 +138,7 @@ export default {
 
 					L.marker([lat.value, lng.value], { draggable: true })
 						.addTo(map.value)
-						.on("dragend", (event) => {
+						.on("draged", (event) => {
 							console.log(event);
 						});
 				});
