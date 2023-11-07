@@ -31,7 +31,7 @@
         </p>
     </div>
     <p>
-        <router-link to="/passwordReset">Olvidó su contraseña?</router-link>
+        <router-link to="/begin_password_reset">Olvidó su contraseña?</router-link>
     </p>
     <p>
         <router-link to="/register">Aún no tiene una cuenta?</router-link>

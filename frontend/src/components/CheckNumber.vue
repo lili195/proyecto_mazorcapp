@@ -1,14 +1,14 @@
 <template>
     <img alt="Vue logo" src="../assets/logo.png">
     <h2>Recuperar mi contraseña</h2>
-    <div class="passReset">
+    <div class="checkNum">
         <p>
             <label>Por favor confirme su número de teléfono</label>
         </p>
 
         <p>
-            <b> Le será enviado un mensaje con un conjunto de números para iniciar el <br>
-            proceso de restablecimineto de su contraseña </b>
+            <b> Le será enviado un mensaje con un conjunto de 4 <br> 
+                números para iniciar el proceso de restablecimineto de su contraseña </b>
         </p>
 
         <p>
@@ -32,7 +32,7 @@ import { required, minLength, maxLength, numeric, helpers } from '@vuelidate/val
 import axios from 'axios';
 
 export default {
-    name: 'PasswordReset',
+    name: 'CheckNumber',
     setup() {
         const state = reactive({
             num: null,
@@ -64,10 +64,11 @@ export default {
         async resetReq() {
             this.v$.$validate()
             if (!this.v$.$error) {
-                axios.post('http://localhost:3000/resetPass', {
+                axios.post('http://localhost:3000/checkNum', {
                     num: this.state.num,
                 }).then((response) => {
                         console.log(response.data);
+                        this.$router.push('/resetToken');
                     }).catch((err) => {
                         console.log(err.response)
                         this.state.error = err.response.data.error
@@ -81,7 +82,7 @@ export default {
 </script>
 
 <style>
-.passReset label {
+.checkNum label {
     font-family: KoHo, sans-serif;
     font-size: larger;
     width: 300px;
@@ -92,7 +93,7 @@ export default {
     margin-left: auto;
 }
 
-.passReset input {
+.checkNum input {
     font-family: KoHo, sans-serif;
     font-size: larger;
     width: 300px;
@@ -105,7 +106,7 @@ export default {
     border: 1px solid mediumspringgreen;
 }
 
-.passReset button {
+.checkNum button {
     color: aliceblue;
     font-family: KoHo, sans-serif;
     font-size: larger;

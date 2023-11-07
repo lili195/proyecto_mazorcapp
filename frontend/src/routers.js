@@ -4,7 +4,9 @@ import LogIn from "./components/LogIn.vue";
 import SessionPage from "./components/SessionPage";
 import CropNew from "./components/CropNew.vue";
 import FollowGrowth from "./components/FollowGrowth.vue";
-import PasswordReset from "./components/PasswordReset.vue";
+import CheckNumber from "./components/CheckNumber.vue";
+import PasswordrstForm from "./components/PasswordrstForm.vue";
+import ResetToken from "./components/ResetToken.vue"
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
@@ -39,9 +41,19 @@ const routes = [
     path: "/followGrowth",
   },
   {
-    name: "PasswordReset",
-    component: PasswordReset,
-    path: "/passwordReset"
+    name: "CheckNumber",
+    component: CheckNumber,
+    path: "/begin_password_reset"
+  },
+  {
+    name: "PasswordrstForm",
+    component: PasswordrstForm,
+    path: "/password_reset"
+  },
+  {
+    name: "ResetToken",
+    component: ResetToken,
+    path: "/resetToken"
   }
 ];
 
