@@ -21,7 +21,7 @@
 					</label>
 				</div>
 				<br>
-				<button @click="getLocation()">Obtener mi ubicación</button>
+				<!-- <button @click="getLocation()">Obtener mi ubicación</button> -->
 
 				<!-- <div>
 					Latitud: {{ markerLat }} , Longitud: {{ markerLng }}
@@ -185,7 +185,7 @@ export default {
 						.then(response => {
 							console.log('Cultivo registrado con éxito', response.data);
 							alert('Datos guardados con éxito')
-							this.$router.push({ name: 'followGrowth' })
+							this.$router.push('/session');
 						})
 						.catch(error => {
 							console.error(error);
