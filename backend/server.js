@@ -196,6 +196,6 @@ const { conn } = require('./config/db')
 // colocar true para pruebas (reiniciar la base de datos)
 conn.sync({ force: false }).then(async () => {
     app.listen(3000, () => {
-        console.log(`%s listening at 3000`) // eslint-disable-line no-console
+        console.log(`Corriendo en el puerto 3000`)
     })
 })

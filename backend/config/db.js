@@ -19,14 +19,6 @@ modelCrops(sequelize)
 
 
 
-// modelCrops.belongsTo(modelPeople, { foreignKey: 'id_person' });
-
-// const people = sequelize.define('people')
-
-// const crops = sequelize.define('crops')
-
-// crops.belongsTo(people)
-// people.hasMany(crops)
 
 // collection.belongsTo(category)
 // category.hasMany(collection)

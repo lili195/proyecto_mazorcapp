@@ -23,9 +23,9 @@
 				<br>
 				<button @click="getLocation()">Obtener mi ubicación</button>
 
-				<div>
-					Latitud: {{ lat }} , Longitud: {{ lng }}
-				</div>
+				<!-- <div>
+					Latitud: {{ markerLat }} , Longitud: {{ markerLng }}
+				</div> -->
 				<div class="flexbox-container">
 					<div ref="mapContainer" style="width: 500px; height: 500px;"></div>
 				</div>
@@ -118,8 +118,12 @@ export default {
 		const map = ref();
 		const mapContainer = ref();
 
+		// longitud y latitud del marcador
+		// let markerLat = null;
+		// let markerLng = null;
+
 		onMounted(() => {
-			map.value = L.map(mapContainer.value).setView([51.505, -0.09], 13);
+			map.value = L.map(mapContainer.value).setView([5.533333, -73.367222], 13);
 			L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 				maxZoom: 19,
 				attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
@@ -138,8 +142,13 @@ export default {
 
 					L.marker([lat.value, lng.value], { draggable: true })
 						.addTo(map.value)
-						.on("draged", (event) => {
-							console.log(event);
+						.on("dragend", (event) => {
+							// Recuperar la longitud y latitud del marcador
+							lng.value = event.target.getLatLng().lat;
+							lat.value = event.target.getLatLng().lng;
+
+							// Mostrar la longitud y latitud en la consola
+							console.log(`Latitud: ${lat.value}, Longitud: ${lng.value}`);
 						});
 				});
 			}

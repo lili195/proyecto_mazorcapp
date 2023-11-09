@@ -2,12 +2,6 @@ const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
 	sequelize.define('crops', {
-		id_crop: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			primaryKey: true,
-			autoIncrement: true,
-		},
 		state_crop: {
 			type: DataTypes.ENUM('A', 'F'),
 			allowNull: false,
@@ -40,5 +34,5 @@ module.exports = (sequelize) => {
 		timeStamps: false,
 		createdAt: false,
 		updatedAt: false
-	})
+	});
 }
