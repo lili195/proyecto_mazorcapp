@@ -191,6 +191,8 @@ app.post('/cropNew', async (req, res) => {
     }
 })
 
+
+
 const { conn } = require('./config/db')
 
 // colocar true para pruebas (reiniciar la base de datos)
