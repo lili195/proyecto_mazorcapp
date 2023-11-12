@@ -13,10 +13,12 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 
-const logout = () => {
-    localStorage.removeItem('token')
-    this.$router.push('/session');
+function logout() {
+  localStorage.removeItem('token');
+  router.push('/');
 }
 </script>

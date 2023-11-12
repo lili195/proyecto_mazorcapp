@@ -1,6 +1,6 @@
 <template>
     <p>
-        <img alt="Title Img" src="../assets/tittleImg.png">
+        <img img :src="require('../assets/mazorcapp_banner.png')" alt="Mazorcapp banner">
     </p>
     <div>
         <p>

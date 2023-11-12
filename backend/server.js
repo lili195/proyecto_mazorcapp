@@ -131,7 +131,7 @@ app.post('/checkNum', async (req, res) => {
 app.post('/password_reset', async (req, res) => {
 
 })
-const globalToken = null
+
 app.post('/login', async (req, res) => {
     try {
         const personFound = await people.findOne({
@@ -156,10 +156,10 @@ app.post('/login', async (req, res) => {
         } else {
             console.log('Inicio de sesion exitoso')
             let token = jwt.sign({ id_person: personFound.id_person }, 'secretkey');
-            globalToken = token;
             return res.status(200).json({
                 title: 'Login exitoso',
-                token: token
+                token: token,
+                id_person: personFound.id_person
             })
         }
     } catch (error) {
@@ -178,7 +178,7 @@ app.post('/cropNew', async (req, res) => {
     try {
         console.log(req.body)
         createCrop(
-            req.cc,
+            //el id de la persona acá
             'A',
             req.body.start_date,
             req.body.latitude,
