@@ -147,7 +147,7 @@ const getLocation = () => {
 
 const submitCrop = () => {
 	if (!this.lat || !this.lng) {
-		alert('El cultivo requiere que su ubicación sea especificada en el mapa')
+		alert('El registro requiere que su ubicación sea especificada en el mapa')
 	} else {
 		const token = localStorage.getItem('token');
 		this.v$.$validate()
