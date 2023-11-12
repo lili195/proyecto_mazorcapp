@@ -2,6 +2,14 @@ const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
 	sequelize.define('crops', {
+		id_person: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            references: {
+                model: 'people',
+                key: 'id_person', 
+            },
+        },
 		state_crop: {
 			type: DataTypes.ENUM('A', 'F'),
 			allowNull: false,

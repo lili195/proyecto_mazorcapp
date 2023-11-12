@@ -5,7 +5,7 @@
 			<router-link to="/">Volver a Inicio</router-link>
 		</p>
 	</div>
-	<img alt="Vue logo" src="../assets/logo.png">
+	<img img :src="require('../assets/logo.png')" alt="Mazorcapp logo">
 	<h2>Registrar nuevo cultivo</h2>
 
 	<div class="register">
@@ -71,117 +71,106 @@
 	</div>
 </template>
   
-<script>
+<script setup>
 import { onMounted, ref, computed, reactive } from "vue";
 import useValidate from '@vuelidate/core'
 import { required, minLength, helpers } from '@vuelidate/validators'
 import L from "leaflet";
 import axios from 'axios';
+const lat = ref(0);
+const lng = ref(0);
+const map = ref();
+const mapContainer = ref();
 
-export default {
+const state = reactive({
+	start_date: '',
+	longitude: '',
+	latitude: '',
+	area: '',
+	plants_num: '',
+	plants_m2: ''
+})
 
-	name: "CropNew",
-	setup() {
-		const state = reactive({
-			start_date: '',
-			longitude: '',
-			latitude: '',
-			area: '',
-			plants_num: '',
-			plants_m2: ''
-		})
+const rules = computed(() => {
+	return {
+		start_date: {
+			required: helpers.withMessage('Porfavor elija una fecha de inicio de siembra', required),
+		},
+		area: {
+			required: helpers.withMessage('Por favor indique el área de su cultivo (metros cuadrados)', required),
+			minLength: minLength(1)
+		},
+		plants_num: {
+			required: helpers.withMessage('Número de plantas no válido', required),
+			minLength: minLength(1)
+		},
+		plants_m2: {
+			required: helpers.withMessage('Número de plantas por m2 no válido', required),
+			minLength: minLength(1)
+		},
+	}
+})
 
-		const rules = computed(() => {
-			return {
-				start_date: {
-					required: helpers.withMessage('Porfavor elija una fecha de inicio de siembra', required),
-				},
-				area: {
-					required: helpers.withMessage('Por favor indique el área de su cultivo (metros cuadrados)', required),
-					minLength: minLength(1)
-				},
-				plants_num: {
-					required: helpers.withMessage('Número de plantas no válido', required),
-					minLength: minLength(1)
-				},
-				plants_m2: {
-					required: helpers.withMessage('Número de plantas por m2 no válido', required),
-					minLength: minLength(1)
-				},
-			}
-		})
+const v$ = useValidate(rules, state)
 
-		const v$ = useValidate(rules, state)
+onMounted(() => {
+	map.value = L.map(mapContainer.value).setView([5.533333, -73.367222], 13);
+	L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+		maxZoom: 19,
+		attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
+	}).addTo(map.value);
 
-		const lat = ref(0);
-		const lng = ref(0);
-		const map = ref();
-		const mapContainer = ref();
+	// Obtener la ubicación del usuario
+	getLocation();
+});
 
-		// longitud y latitud del marcador
-		// let markerLat = null;
-		// let markerLng = null;
+const getLocation = () => {
+	if (navigator.geolocation) {
+		navigator.geolocation.watchPosition((position) => {
+			lat.value = position.coords.latitude;
+			lng.value = position.coords.longitude;
+			map.value.setView([lat.value, lng.value], 13);
 
-		onMounted(() => {
-			map.value = L.map(mapContainer.value).setView([5.533333, -73.367222], 13);
-			L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-				maxZoom: 19,
-				attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
-			}).addTo(map.value);
+			L.marker([lat.value, lng.value], { draggable: true })
+				.addTo(map.value)
+				.on("dragend", (event) => {
+					// Recuperar la longitud y latitud del marcador
+					lng.value = event.target.getLatLng().lat;
+					lat.value = event.target.getLatLng().lng;
 
-			// Obtener la ubicación del usuario
-			getLocation();
-		});
-
-		function getLocation() {
-			if (navigator.geolocation) {
-				navigator.geolocation.watchPosition((position) => {
-					lat.value = position.coords.latitude;
-					lng.value = position.coords.longitude;
-					map.value.setView([lat.value, lng.value], 13);
-
-					L.marker([lat.value, lng.value], { draggable: true })
-						.addTo(map.value)
-						.on("dragend", (event) => {
-							// Recuperar la longitud y latitud del marcador
-							lng.value = event.target.getLatLng().lat;
-							lat.value = event.target.getLatLng().lng;
-
-							// Mostrar la longitud y latitud en la consola
-							console.log(`Latitud: ${lat.value}, Longitud: ${lng.value}`);
-						});
+					// Mostrar la longitud y latitud en la consola
+					console.log(`Latitud: ${lat.value}, Longitud: ${lng.value}`);
 				});
-			}
-		}
+		});
+	}
+}
 
-		return {
-			lat,
-			lng,
-			map,
-			mapContainer,
-			getLocation,
-			state,
-			v$
-		};
-	},
+const submitCrop = () => {
+	if (!this.lat || !this.lng) {
+		alert('El cultivo requiere que su ubicación sea especificada en el mapa')
+	} else {
+		const token = localStorage.getItem('token');
+		this.v$.$validate()
+		if (!this.v$.$error) {
+			const userCrop = {
+				start_date: this.state.start_date,
+				longitude: this.lng,
+				latitude: this.lat,
+				area: this.state.area,
+				plants_num: this.state.plants_num,
+				plants_m2: this.state.plants_m2,
+			};
 
-	methods: {
-		submitCrop() {
-			if (!this.lat || !this.lng) {
-				alert('El cultivo requiere que su ubicación sea especificada en el mapa')
+			if (!token) {
+				alert('Token de inicio de sesión no encontrado')
+				this.$router.push('/');
 			} else {
-				this.v$.$validate()
-				if (!this.v$.$error) {
-					const userCrop = {
-						start_date: this.state.start_date,
-						longitude: this.lng,
-						latitude: this.lat,
-						area: this.state.area,
-						plants_num: this.state.plants_num,
-						plants_m2: this.state.plants_m2,
-					};
-					console.log(userCrop)
-					axios.post('http://localhost:3000/cropNew', userCrop)
+				try {
+					axios.post('http://localhost:3000/cropNew', userCrop, {
+						headers: {
+							'Authorization': token,
+						}
+					})
 						.then(response => {
 							console.log('Cultivo registrado con éxito', response.data);
 							alert('Datos guardados con éxito')
@@ -190,16 +179,19 @@ export default {
 						.catch(error => {
 							console.error(error);
 						});
-				} else {
-					alert('Datos no correctos')
+				} catch (error) {
+					alert('Error inesperado')
 				}
 			}
+		} else {
+			alert('Datos no correctos')
 		}
 	}
-};
+}
+
 </script>
   
-<style>
+<style scoped>
 .crop-register label {
 	font-family: KoHo, sans-serif;
 	font-size: larger;

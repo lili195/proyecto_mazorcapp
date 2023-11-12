@@ -13,35 +13,6 @@ const sequelize = new Sequelize({
 modelPeople(sequelize)
 modelCrops(sequelize)
 
-/**
- * crear las relaciones
- */
-
-
-
-
-// collection.belongsTo(category)
-// category.hasMany(collection)
-
-// user.hasMany(collection)
-// collection.belongsTo(user)
-
-// collection.hasMany(nft)
-// nft.belongsTo(collection)
-// user.hasMany(nft)
-// nft.belongsTo(user)
-
-// user.belongsToMany(nft, { through: shoppingCar })
-// nft.belongsToMany(user, { through: shoppingCar })
-
-// user.belongsToMany(nft, { through: favorite })
-// nft.belongsToMany(user, { through: favorite })
-
-// user.belongsToMany(nft, { through: like })
-// nft.belongsToMany(user, { through: like })
-
-// user.belongsToMany(nft, { through: order })
-// nft.belongsToMany(user, { through: order })s
 
 module.exports = {
   ...sequelize.models,

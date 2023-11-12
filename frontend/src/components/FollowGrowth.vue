@@ -2,7 +2,7 @@
     <div class="followGrowth">
         <h1>Seguimiento de Crecimiento</h1>
         <p>
-            <img src="../assets/corn_phenology.jpg" alt="Imagen del proceso de maduración del maíz" />
+            <img :src="require('../assets/corn_phenology.jpg')" alt="Imagen del proceso de maduración del maíz" />
         </p>
         <input v-model="descripcion" type="text" placeholder="Agregar descripción" />
         <button @click="agregarDescripcion">Guardar datos</button>
@@ -17,27 +17,13 @@
     </div>
 </template>
   
-<script>
-export default {
-    name: 'FollowGrowth',
-    data() {
-        return {
-            descripcion: '',
-            descripciones: [],
-        };
-    },
-    methods: {
-        agregarDescripcion() {
-            if (this.descripcion) {
-                this.descripciones.push(this.descripcion);
-                this.descripcion = '';
-            }
-        },
-    },
-};
+<script setup>
+
+
+
 </script>
 
-<style>
+<style scoped>
 .followGrowth label {
     font-family: KoHo, sans-serif;
     font-size: larger;

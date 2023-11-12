@@ -93,7 +93,7 @@ async function sendSMS(otp_msg, number_person) {
 }
 
 function getOTP() {
-    return Math.floor(1000+Math.random()*9000)
+    return Math.floor(1000 + Math.random() * 9000)
 }
 
 app.post('/checkNum', async (req, res) => {
@@ -107,7 +107,7 @@ app.post('/checkNum', async (req, res) => {
         });
         if (existingNum) {
             const otp = getOTP()
-            let number_person = '+57'+req.body.num
+            let number_person = '+57' + req.body.num
             console.log(otp, number_person)
             sendSMS(otp, number_person)
             res.status(200).json({
@@ -172,11 +172,23 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.post('/cropNew', async (req, res) => {
+const verifyToken = (req, res, next) => {
+    const bearerHeader = req.header("authorization");
+    if (typeof bearerHeader !== "undefined") {
+        const bearerToken = bearerHeader.split(" ")[1];
+        req.token = bearerToken;
+        next();
+    } else {
+        res.sendStatus(401).send('token no autorizado');
+    }
+};
+
+app.post('/cropNew', verifyToken, async (req, res) => {
     console.log("Solicitud recibida de front")
     try {
         console.log(req.body)
         createCrop(
+            req.cc,
             'A',
             req.body.start_date,
             req.body.latitude,
