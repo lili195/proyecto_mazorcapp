@@ -178,7 +178,7 @@ app.post('/cropNew', async (req, res) => {
     try {
         console.log(req.body)
         createCrop(
-            //el id de la persona acá
+            req.body.id_person,
             'A',
             req.body.start_date,
             req.body.latitude,

@@ -130,6 +130,7 @@ export default {
                 }).then((response) => {
                     console.log(response.data);
                     localStorage.setItem('token', response.data.token)
+                    localStorage.setItem('id_person', response.data.id_person)
                     this.$router.push('/session');
                 }).catch((err) => {
                     console.log(err.response)

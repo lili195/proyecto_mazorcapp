@@ -4,16 +4,7 @@
         <p>
             <img :src="require('../assets/corn_phenology.jpg')" alt="Imagen del proceso de maduración del maíz" />
         </p>
-        <input v-model="descripcion" type="text" placeholder="Agregar descripción" />
-        <button @click="agregarDescripcion">Guardar datos</button>
-        <div>
-            <p>
-                <router-link to="/session">Volver a Inicio</router-link>
-            </p>
-        </div>
-        <ul>
-            <li v-for="(item, index) in descripciones" :key="index">{{ item }}</li>
-        </ul>
+
     </div>
 </template>
   

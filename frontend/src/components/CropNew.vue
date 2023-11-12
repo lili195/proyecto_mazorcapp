@@ -73,11 +73,12 @@
   
 <script setup>
 import { onMounted, ref, computed, reactive } from "vue";
-import useValidate from '@vuelidate/core'
+import useVuelidate from "@vuelidate/core";
 import { required, minLength, helpers } from '@vuelidate/validators'
 import L from "leaflet";
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+const router = useRouter();
 const lat = ref(0);
 const lng = ref(0);
 const map = ref();
@@ -87,7 +88,7 @@ const token = localStorage.getItem('token');
 const checkCredentials = () => {
 	if (localStorage.length === 0 || !token) {
 		alert('Token de inicio de sesión no encontrado')
-		useRouter().push('/');
+		router.push('/');
 	}
 }
 
@@ -122,7 +123,9 @@ const rules = computed(() => {
 	}
 })
 
-const v$ = useValidate(rules, state)
+const v$ = useVuelidate(rules,state)
+
+
 
 onMounted(() => {
 	map.value = L.map(mapContainer.value).setView([5.533333, -73.367222], 13);
@@ -156,20 +159,20 @@ const getLocation = () => {
 	}
 }
 
-const submitCrop = () => {
-	if (!this.lat || !this.lng) {
+function submitCrop() {
+	if (!lat.value || !lng.value) {
 		alert('El registro requiere que su ubicación sea especificada en el mapa')
 	} else {
-		this.v$.$validate()
-		if (!this.v$.$error) {
+		v$.value.$validate()
+		if (!v$.value.$error) {
 			const userCrop = {
-				token: this.token,
-				start_date: this.state.start_date,
-				longitude: this.lng,
-				latitude: this.lat,
-				area: this.state.area,
-				plants_num: this.state.plants_num,
-				plants_m2: this.state.plants_m2,
+				id_person: localStorage.getItem('id_person'),
+				start_date: state.start_date,
+				longitude: lng.value,
+				latitude: lat.value,
+				area: state.area,
+				plants_num: state.plants_num,
+				plants_m2: state.plants_m2,
 			};
 
 			try {
@@ -181,7 +184,7 @@ const submitCrop = () => {
 					.then(response => {
 						console.log('Cultivo registrado con éxito', response.data);
 						alert('Datos guardados con éxito')
-						this.$router.push('/session');
+						router.push('/session');
 					})
 					.catch(error => {
 						console.error(error);
