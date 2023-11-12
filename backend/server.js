@@ -131,7 +131,7 @@ app.post('/checkNum', async (req, res) => {
 app.post('/password_reset', async (req, res) => {
 
 })
-
+const globalToken = null
 app.post('/login', async (req, res) => {
     try {
         const personFound = await people.findOne({
@@ -156,6 +156,7 @@ app.post('/login', async (req, res) => {
         } else {
             console.log('Inicio de sesion exitoso')
             let token = jwt.sign({ id_person: personFound.id_person }, 'secretkey');
+            globalToken = token;
             return res.status(200).json({
                 title: 'Login exitoso',
                 token: token
@@ -172,18 +173,7 @@ app.post('/login', async (req, res) => {
     }
 })
 
-const verifyToken = (req, res, next) => {
-    const bearerHeader = req.header("authorization");
-    if (typeof bearerHeader !== "undefined") {
-        const bearerToken = bearerHeader.split(" ")[1];
-        req.token = bearerToken;
-        next();
-    } else {
-        res.sendStatus(401).send('token no autorizado');
-    }
-};
-
-app.post('/cropNew', verifyToken, async (req, res) => {
+app.post('/cropNew', async (req, res) => {
     console.log("Solicitud recibida de front")
     try {
         console.log(req.body)

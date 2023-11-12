@@ -5,7 +5,7 @@
 			<router-link to="/">Volver a Inicio</router-link>
 		</p>
 	</div>
-	<img img :src="require('../assets/logo.png')" alt="Mazorcapp logo">
+	<img :src="require('../assets/logo.png')" alt="Mazorcapp logo">
 	<h2>Registrar nuevo cultivo</h2>
 
 	<div class="register">
@@ -77,10 +77,21 @@ import useValidate from '@vuelidate/core'
 import { required, minLength, helpers } from '@vuelidate/validators'
 import L from "leaflet";
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 const lat = ref(0);
 const lng = ref(0);
 const map = ref();
 const mapContainer = ref();
+const token = localStorage.getItem('token');
+
+const checkCredentials = () => {
+	if (localStorage.length === 0 || !token) {
+		alert('Token de inicio de sesión no encontrado')
+		useRouter().push('/');
+	}
+}
+
+checkCredentials();
 
 const state = reactive({
 	start_date: '',
@@ -149,10 +160,10 @@ const submitCrop = () => {
 	if (!this.lat || !this.lng) {
 		alert('El registro requiere que su ubicación sea especificada en el mapa')
 	} else {
-		const token = localStorage.getItem('token');
 		this.v$.$validate()
 		if (!this.v$.$error) {
 			const userCrop = {
+				token: this.token,
 				start_date: this.state.start_date,
 				longitude: this.lng,
 				latitude: this.lat,
@@ -161,28 +172,24 @@ const submitCrop = () => {
 				plants_m2: this.state.plants_m2,
 			};
 
-			if (!token) {
-				alert('Token de inicio de sesión no encontrado')
-				this.$router.push('/');
-			} else {
-				try {
-					axios.post('http://localhost:3000/cropNew', userCrop, {
-						headers: {
-							'Authorization': token,
-						}
+			try {
+				axios.post('http://localhost:3000/cropNew', userCrop, {
+					headers: {
+						'Authorization': token,
+					}
+				})
+					.then(response => {
+						console.log('Cultivo registrado con éxito', response.data);
+						alert('Datos guardados con éxito')
+						this.$router.push('/session');
 					})
-						.then(response => {
-							console.log('Cultivo registrado con éxito', response.data);
-							alert('Datos guardados con éxito')
-							this.$router.push('/session');
-						})
-						.catch(error => {
-							console.error(error);
-						});
-				} catch (error) {
-					alert('Error inesperado')
-				}
+					.catch(error => {
+						console.error(error);
+					});
+			} catch (error) {
+				alert('Error inesperado')
 			}
+
 		} else {
 			alert('Datos no correctos')
 		}
