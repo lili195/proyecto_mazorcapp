@@ -193,12 +193,10 @@ app.post('/cropNew', async (req, res) => {
     }
 })
 
-
-
 const { conn } = require('./config/db')
 
 // colocar true para pruebas (reiniciar la base de datos)
-conn.sync({ force: false }).then(async () => {
+conn.sync({ force: true }).then(async () => {
     app.listen(3000, () => {
         console.log(`Corriendo en el puerto 3000`)
     })

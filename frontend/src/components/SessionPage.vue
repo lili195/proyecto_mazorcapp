@@ -19,6 +19,7 @@ const router = useRouter();
 
 function logout() {
   localStorage.removeItem('token');
+  localStorage.removeItem('id_person');
   router.push('/');
 }
 </script>

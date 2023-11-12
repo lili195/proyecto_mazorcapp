@@ -2,6 +2,12 @@ const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
 	sequelize.define('crops', {
+		id_crop: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            primaryKey: true,
+			autoIncrement: true
+        },
 		id_person: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -38,7 +44,8 @@ module.exports = (sequelize) => {
 			type: DataTypes.STRING,
 			allowNull: false,
 		}
-	}, {
+	},
+	{
 		timeStamps: false,
 		createdAt: false,
 		updatedAt: false
