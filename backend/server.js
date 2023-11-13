@@ -1,5 +1,5 @@
 const { createPerson } = require('./models/person')
-const { people } = require('./config/db')
+const { people, crops } = require('./config/db')
 const { createCrop } = require('./models/crop')
 
 if (process.env.NODE_ENV !== 'production') {
@@ -192,6 +192,22 @@ app.post('/cropNew', async (req, res) => {
         res.status(400).send('Error en solicitud');
     }
 })
+
+async function getCropLocation(id_crop) {
+    const crop = await crops.findOne({
+        where: {
+            id_crop: id_crop,
+        }
+    })
+    const cropData = crop.get();
+    console.log(cropData)
+} 
+
+//TODO: revisar q el getcroplocation funcione
+
+
+
+
 
 const { conn } = require('./config/db')
 

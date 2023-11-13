@@ -37,11 +37,11 @@ module.exports = (sequelize) => {
 			allowNull: false,
 		},
 		plants_totalNum_crop: {
-			type: DataTypes.STRING,
+			type: DataTypes.INTEGER,
 			allowNull: false
 		},
 		plants_perM2_crop: {
-			type: DataTypes.STRING,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 		}
 	},

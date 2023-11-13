@@ -2,6 +2,12 @@ const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
 	sequelize.define('trackings', {
+        id_tracking: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            primaryKey: true,
+			autoIncrement: true
+        },
         id_crop: {
             type: DataTypes.INTEGER,
             allowNull: false,
