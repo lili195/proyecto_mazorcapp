@@ -193,15 +193,21 @@ app.post('/cropNew', async (req, res) => {
     }
 })
 
-async function getCropLocation(id_crop) {
-    const crop = await crops.findOne({
-        where: {
-            id_crop: id_crop,
-        }
-    })
-    const cropData = crop.get();
-    console.log(cropData)
-} 
+app.get('/followGrowth', async(req, res) => {
+
+
+
+})
+
+// async function getCropLocation(id_crop) {
+//     const crop = await crops.findOne({
+//         where: {
+//             id_crop: id_crop,
+//         }
+//     })
+//     const cropData = crop.get();
+//     console.log(cropData)
+// } 
 
 //TODO: revisar q el getcroplocation funcione
 
@@ -212,7 +218,7 @@ async function getCropLocation(id_crop) {
 const { conn } = require('./config/db')
 
 // colocar true para pruebas (reiniciar la base de datos)
-conn.sync({ force: true }).then(async () => {
+conn.sync({ force: false }).then(async () => {
     app.listen(3000, () => {
         console.log(`Corriendo en el puerto 3000`)
     })
