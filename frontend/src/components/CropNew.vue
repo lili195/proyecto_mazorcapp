@@ -77,6 +77,7 @@ import useValidate from '@vuelidate/core'
 import { required, minLength, helpers } from '@vuelidate/validators'
 import L from "leaflet";
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 export default {
 
@@ -90,6 +91,17 @@ export default {
 			plants_num: '',
 			plants_m2: ''
 		})
+
+		const token = localStorage.getItem('token');
+
+		const checkCredentials = () => {
+			if (localStorage.length === 0 || !token) {
+				alert('Token de inicio de sesión no encontrado')
+				useRouter().push('/');
+			}
+		}
+
+		checkCredentials();
 
 		const rules = computed(() => {
 			return {
