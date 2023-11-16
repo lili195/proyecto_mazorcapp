@@ -8,10 +8,11 @@ import "vuetify/styles";
 import { createVuetify } from "vuetify";
 //import { icon } from "leaflet";
 
-export default createVuetify(
-  {
-    icons: {
-      iconfont: "fa" || "md",
+export default createVuetify({
+  icons: {
+    iconfont: "fa" || "md",
+    values: {
+      registerCrop: "assets/register_crop.svg",
     },
-  } // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
-);
+  }, // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
+});

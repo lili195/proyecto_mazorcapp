@@ -1,81 +1,81 @@
 <template>
-    <img alt="Vue logo" src="../assets/logo.png">
-    <h2>Registrarme</h2>
-    <div class="register">
-        <p>
-            <label>Por favor rellene los siguientes campos: </label>
-        </p>
-        <p>
-            <span class="label cc" style="margin-right:190px; font-size: large;">Ingrese su número de cédula</span>
-        </p>
-
-        <p>
-            <input type="text" id="cc" v-model="state.cc" placeholder="Número de Cédula *" />
-            <span v-if="v$.cc.$error">
-                {{ v$.cc.$errors[0].$message }}
-            </span>
-        </p>
-
-        <p>
-            {{ state.error }}
-        </p>
-
-        <p>
-            <span class="label name" style="margin-right:215px; font-size: large;">Ingrese su primer nombre</span>
-        </p>
-
-        <p>
-            <input type="text" id="name" v-model="state.name" placeholder="Primer nombre *" />
-            <span v-if="v$.name.$error">
-                {{ v$.name.$errors[0].$message }}
-            </span>
-        </p>
-
-        <p>
-            <span class="label num" style="margin-right:180px; font-size: large;">Ingrese su número de teléfono</span>
-        </p>
-
-        <p>
-            <input type="text" id="number" v-model="state.number" placeholder="Número de teléfono *" />
-            <span v-if="v$.number.$error">
-                {{ v$.number.$errors[0].$message }}
-            </span>
-        </p>
-
-        <p>
-            <span class="label password" style="margin-right:215px; font-size: large;">Ingrese una contraseña</span>
-        </p>
-
-        <p>
-            <input type="password" id="password" v-model="state.password.password"
-                placeholder="Contraseña * (debe tener al menos 6 caracteres)" />
-            <span v-if="v$.password.password.$error">
-                {{ v$.password.password.$errors[0].$message }}
-            </span>
-        </p>
-
-        <p>
-            <span class="label password" style="margin-right:170px; font-size: large;">Porfavor confirme la
-                contraseña</span>
-        </p>
-
-        <p>
-            <input type="password" id="confirm" v-model="state.password.confirm" placeholder="Confirmar contraseña *" />
-            <span v-if="v$.password.confirm.$error">
-                {{ v$.password.confirm.$errors[0].$message }}
-            </span>
-        </p>
-
-        <div>
-            <button v-on:click="submitRegister">Guardar datos</button>
-        </div>
-    </div>
-
-    <div>
-        <p>
-            <router-link to="/session">Volver a Inicio</router-link>
-        </p>
-    </div>
+    <v-container>
+        <v-row align="center" justify="center">
+            <v-col cols="12" sm="10">
+                <v-row>
+                    <v-col cols="12">
+                        <div style="text-align: center">
+                            <v-img :src="require('../assets/mazorcapp_banner.png')" class="my-3" contain height="50" />
+                        </div>
+                    </v-col>
+                </v-row>
+                <v-row justify="center" align="center">
+                    <v-col cols="auto">
+                        <router-link to="/">
+                            <v-btn class="custom-button" density="compact" variant="text">Inicio</v-btn>
+                        </router-link>
+                    </v-col>
+                    <v-col cols="auto">
+                        <v-btn class="custom-button" density="compact" variant="text">Acerca</v-btn>
+                    </v-col>
+                    <v-col cols="auto">
+                        <v-btn class="custom-button" density="compact" variant="text">Soporte</v-btn>
+                    </v-col>
+                </v-row>
+                <v-card class="elevation-6 mt-10">
+                    <v-window v-model="step">
+                        <v-window-item>
+                            <v-row>
+                                <v-col cols="12" sm="6" class="rounded-br-xl custom-color">
+                                    <div style="text-align: center;padding: 180px 0;">
+                                        <v-card-text class="white--text">
+                                            <h1 class="text-center" style="color: white;">¿Ya estás registrado?</h1>
+                                            <h3 class="text-center" style="color: whitesmoke;"><br>Ingresa a tu cuenta para
+                                                poder gestionar tus cultivos de mazorca</h3>
+                                        </v-card-text>
+                                        <div class="text-center">
+                                            <router-link to="/login">
+                                                <v-btn style="color:white" variant="outlined">Ingresar</v-btn>
+                                            </router-link>
+                                        </div>
+                                    </div>
+                                </v-col>
+                                <v-col cols="12" sm="6">
+                                    <v-card-text class="mt-12">
+                                        <h1 class="text-center">Registra tu cuenta</h1>
+                                        <h3 class="text-center" style="color:grey"><br>Registra tus datos para comenzar
+                                            una nueva experiencia</h3>
+                                        <v-row align="center" justify="center">
+                                            <v-col cols="12" sm="8">
+                                                <v-text-field label="Cédula" outlined dense color="#3CB371"
+                                                    autocomplete="false" class="mt-8"></v-text-field>
+                                                <v-text-field label="Primer nombre" outlined dense color="#3CB371"
+                                                    autocomplete="false"></v-text-field>
+                                                <v-text-field label="Celular" outlined dense color="#3CB371"
+                                                    autocomplete="false"></v-text-field>
+                                                <v-text-field label="Contraseña" outlined dense color="#3CB371"
+                                                    autocomplete="false" v-model="password"
+                                                    :type="showPassword ? 'text' : 'password'"
+                                                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                                    @click:append="togglePasswordVisibility"></v-text-field>
+                                                <v-text-field label="Confirmar contraseña" outlined dense color="#3CB371"
+                                                    autocomplete="false" v-model="confirm"
+                                                    :type="showPassword ? 'text' : 'password'"
+                                                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                                    @click:append="togglePasswordVisibility"></v-text-field>
+                                                <v-btn v-on:click="register" color="#3CB371" dark block
+                                                    tile>Registrarse</v-btn>
+                                            </v-col>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-col>
+                            </v-row>
+                        </v-window-item>
+                    </v-window>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 <script>
 import useValidate from '@vuelidate/core'
@@ -85,7 +85,7 @@ import { computed, reactive } from 'vue';
 
 export default {
     name: 'RegisterForm',
-    
+
     setup() {
         const state = reactive({
             cc: '',
@@ -163,44 +163,49 @@ export default {
             } else {
                 alert('Datos no correctos')
             }
-        }
-    }
+        },
+        togglePasswordVisibility() {
+            this.showPassword = !this.showPassword;
+        },
+    },
+    data() {
+        return {
+            password: '',
+            showPassword: false,
+            step: 1,
+        };
+    },
+    props: {
+        source: String,
+    },
 }
 </script>
 
-<style>
-.register label {
-    font-family: KoHo, sans-serif;
-    font-size: larger;
-    width: 300px;
-    height: 40px;
-    display: block;
-    margin-bottom: 20px;
-    margin-right: auto;
-    margin-left: auto;
+<style scoped>
+.v-application .rounded-bl-xl {
+    border-bottom-left-radius: 300px !important;
 }
 
-.register input {
-    font-family: KoHo, sans-serif;
-    font-size: larger;
-    width: 400px;
-    height: 40px;
-    padding-left: 20px;
-    display: block;
-    margin-bottom: 20px;
-    margin-right: auto;
-    margin-left: auto;
-    border: 1px solid mediumspringgreen;
+.v-application .rounded-br-xl {
+    border-bottom-right-radius: 300px !important;
 }
 
-.register button {
-    color: aliceblue;
-    font-family: KoHo, sans-serif;
-    font-size: larger;
-    width: 320px;
-    height: 40px;
-    border: 1px solid mediumspringgreen;
-    background-color: mediumseagreen;
-    cursor: pointer;
+.custom-color {
+    background-color: #3CB371;
+    /* Cambia el color a tu preferencia */
+    /* Otras propiedades de estilo si es necesario */
+}
+
+.custom-button {
+    color: black;
+    /* Cambia el color del texto a negro o el color deseado */
+    text-decoration: none;
+    /* Evita el subrayado del texto */
+}
+
+/* Estilo para los botones cuando se seleccionan */
+.custom-button:hover {
+    color: none;
+    /* Cambia el color del texto al seleccionar el botón */
 }
 </style>

@@ -1,122 +1,117 @@
 <template>
-	<h1>Mazorcapp</h1>
-	<div>
-		<p>
-			<router-link to="/">Volver a Inicio</router-link>
-		</p>
-	</div>
-	<img alt="Vue logo" src="../assets/logo.png">
-	<h2>Registrar nuevo cultivo</h2>
-
-	<div class="register">
-		<p>
-			<label><b>Por favor rellene los siguientes campos:</b></label>
-		</p>
-
-		<form>
-			<div>
-				<div>
-					<label>
-						Permita que rastreemos su ubicación para el cultivo que desea registrar antes de continuar.
-					</label>
-				</div>
-				<br>
-				<button @click="getLocation()">Obtener mi ubicación</button>
-
-				<div>
-					Latitud: {{ lat }} , Longitud: {{ lng }}
-				</div>
-				<div class="flexbox-container">
-					<div ref="mapContainer" style="width: 500px; height: 500px;"></div>
-				</div>
-			</div>
-
-			<p>
-				<label>Fecha de siembra del cultivo</label>
-				<input type="date" v-model="state.start_date" placeholder="Fecha de siembra del cultivo">
-				<span v-if="v$.start_date.$error">
-					{{ v$.start_date.$errors[0].$message }}
-				</span>
-			</p>
-
-			<p>
-				<label>Área total del cultivo (metros cuadrados)</label>
-				<input type="number" v-model="state.area" placeholder="Área total del cultivo">
-				<span v-if="v$.area.$error">
-					{{ v$.area.$errors[0].$message }}
-				</span>
-			</p>
-
-			<p>
-				<label>Número de plantas a cultivar</label>
-				<input type="number" v-model="state.plants_num" placeholder="Número de plantas a cultivar">
-				<span v-if="v$.plants_num.$error">
-					{{ v$.plants_num.$errors[0].$message }}
-				</span>
-			</p>
-
-			<p>
-				<label>Número de plantas por metro cuadrado</label>
-				<input type="number" v-model="state.plants_m2" placeholder="Número de plantas por metro cuadrado">
-				<span v-if="v$.plants_m2.$error">
-					{{ v$.plants_m2.$errors[0].$message }}
-				</span>
-			</p>
-
-		</form>
-
-		<div>
-			<button v-on:click="submitCrop">Guardar datos</button>
-		</div>
-	</div>
+	<v-container>
+		<v-row align="center" justify="center">
+			<v-col cols="12" sm="10">
+				<v-row>
+					<v-col cols="12">
+						<div style="text-align: center">
+							<v-img :src="require('../assets/mazorcapp_banner.png')" class="my-3" contain height="50" />
+						</div>
+					</v-col>
+				</v-row>
+				<v-row align="center" justify="center">
+					<v-col cols="auto">
+						<v-btn style="background-color: #99cc66; color: white;" density="compact" variant="elevated">
+							<v-icon>mdi-seed</v-icon> Registrar Cultivo
+						</v-btn>
+					</v-col>
+					<v-col cols="auto">
+						<v-btn class="custom-button" density="compact" variant="elevated">
+							<v-icon>mdi-chart-line</v-icon> Seguimiento
+						</v-btn>
+					</v-col>
+					<v-col cols="auto">
+						<v-btn class="custom-button" density="compact" variant="elevated">
+							<v-icon>mdi-file-chart</v-icon> Informes
+						</v-btn>
+					</v-col>
+				</v-row>
+				<v-card class="elevation-6 mt-10">
+					<v-window v-model="step">
+						<v-window-item :value="1">
+							<v-row>
+								<v-col cols="12" sm="6">
+									<v-card-text class="mt-12">
+										<h1 class="text-center">Registra tu cultivo</h1>
+										<br>
+										<h3 style="color:grey">Ingresa los datos de tu cultivo
+										</h3>
+										<v-form>
+											<v-text-field class="mt-10" label="Fecha de siembra" prepend-icon="date_range"
+												type="date" v-model="due" outlined dense color="#3CB371"></v-text-field>
+											<v-text-field label="Área total del cultivo (m2)" outlined dense color="#3CB371"
+												autocomplete="false" v-model="cropArea"
+												:rules="cropAreaRules"></v-text-field>
+											<v-select label="Cantidad de plantas por m2" outlined dense color="#3CB371"
+												:items="['2', '3', '4']" v-model="plantsPerSquareMeter"></v-select>
+											<v-text-field label="Cantidad de plantas a cultivar" outlined dense
+												color="#3CB371" autocomplete="false" v-model="totalPlants"
+												readonly></v-text-field>
+											<v-row>
+												<v-col cols="12" sm="6">
+													<h4 style="color:grey">Latitud
+													</h4>
+													<v-text-field class="mt-3" outlined dense color="#3CB371"
+														autocomplete="false" readonly>{{ lat }}</v-text-field>
+												</v-col>
+												<v-col cols="12" sm="6">
+													<h4 style="color:grey">Longitud
+													</h4>
+													<v-text-field class="mt-3" outlined dense color="#3CB371"
+														autocomplete="false" readonly>{{ lng }}</v-text-field>
+												</v-col>
+											</v-row>
+											<v-btn color="#3CB371" dark block tile>Guardar cultivo</v-btn>
+										</v-form>
+									</v-card-text>
+								</v-col>
+								<v-col cols="12" sm="6">
+									<v-card-text class="mt-12">
+										<v-row align="center" justify="center">
+											<div class="flexbox-container">
+												<div ref="mapContainer" style="width: 410px; height: 410px;"></div>
+											</div>
+										</v-row>
+										<div class="text-center">
+											<v-btn class="mt-8" color="#3CB371" dark block tile variant="tonal"
+												@click="getLocation()">Obtener
+												ubicación</v-btn>
+										</div>
+									</v-card-text>
+								</v-col>
+							</v-row>
+						</v-window-item>
+					</v-window>
+				</v-card>
+			</v-col>
+		</v-row>
+	</v-container>
 </template>
-  
+
 <script>
-import { onMounted, ref, computed, reactive } from "vue";
-import useValidate from '@vuelidate/core'
-import { required, minLength, helpers } from '@vuelidate/validators'
-import L from "leaflet";
-import axios from 'axios';
+import { onMounted, ref } from 'vue';
+import L from 'leaflet';
+// import axios from 'axios';
+// import { useRouter } from 'vue-router';
 
 export default {
-
-	name: "CropNew",
+	name: 'CropNew',
 	setup() {
-		const state = reactive({
-			start_date: '',
-			longitude: '',
-			latitude: '',
-			area: '',
-			plants_num: '',
-			plants_m2: ''
-		})
+		// const router = useRouter();
+		const lat = ref(0)
+		const lng = ref(0)
+		const map = ref()
+		const mapContainer = ref()
+		// const token = localStorage.getItem('token');
 
-		const rules = computed(() => {
-			return {
-				start_date: {
-					required: helpers.withMessage('Porfavor elija una fecha de inicio de siembra', required),
-				},
-				area: {
-					required: helpers.withMessage('Por favor indique el área de su cultivo (metros cuadrados)', required),
-					minLength: minLength(1)
-				},
-				plants_num: {
-					required: helpers.withMessage('Número de plantas no válido', required),
-					minLength: minLength(1)
-				},
-				plants_m2: {
-					required: helpers.withMessage('Número de plantas por m2 no válido', required),
-					minLength: minLength(1)
-				},
-			}
-		})
+		// const checkCredentials = () => {
+		// 	if (localStorage.length === 0 || !token) {
+		// 		alert('Token de inicio de sesión no encontrado')
+		// 		router.push('/');
+		// 	}
+		// }
 
-		const v$ = useValidate(rules, state)
-
-		const lat = ref(0);
-		const lng = ref(0);
-		const map = ref();
-		const mapContainer = ref();
+		// checkCredentials();
 
 		onMounted(() => {
 			map.value = L.map(mapContainer.value).setView([51.505, -0.09], 13);
@@ -144,86 +139,81 @@ export default {
 				});
 			}
 		}
-
 		return {
 			lat,
 			lng,
 			map,
 			mapContainer,
 			getLocation,
-			state,
-			v$
 		};
 	},
-
-	methods: {
-		submitCrop() {
-			if (!this.lat || !this.lng) {
-				alert('El cultivo requiere que su ubicación sea especificada en el mapa')
-			} else {
-				this.v$.$validate()
-				if (!this.v$.$error) {
-					const userCrop = {
-						start_date: this.state.start_date,
-						longitude: this.lng,
-						latitude: this.lat,
-						area: this.state.area,
-						plants_num: this.state.plants_num,
-						plants_m2: this.state.plants_m2,
-					};
-					console.log(userCrop)
-					axios.post('http://localhost:3000/cropNew', userCrop)
-						.then(response => {
-							console.log('Cultivo registrado con éxito', response.data);
-							alert('Datos guardados con éxito')
-							this.$router.push({ name: 'followGrowth' })
-						})
-						.catch(error => {
-							console.error(error);
-						});
-				} else {
-					alert('Datos no correctos')
+	data: () => ({
+		step: 1,
+		due: null,
+		cropArea: 0,
+		plantsPerSquareMeter: '2',
+		totalPlants: 0,
+		cropAreaRules: [
+			v => {
+				if (!v) {
+					return 'Ingrese el área';
 				}
+				return true;
+			},
+			v => {
+				if (!/^\d+$/.test(v)) {
+					return 'Ingrese dígitos numéricos';
+				}
+				return true;
 			}
-		}
-	}
-};
+		]
+	}),
+	watch: {
+		cropArea: 'updateTotalPlants',
+		plantsPerSquareMeter: 'updateTotalPlants',
+	},
+	methods: {
+		updateTotalPlants() {
+			// Convierte los valores a números y realiza la multiplicación
+			this.totalPlants = parseInt(this.cropArea) * parseInt(this.plantsPerSquareMeter);
+			if (isNaN(this.totalPlants)) {
+				this.totalPlants = 0;
+			}
+		},
+	},
+	propos: {
+		source: String
+	},
+}
 </script>
-  
-<style>
-.crop-register label {
-	font-family: KoHo, sans-serif;
-	font-size: larger;
-	width: 400px;
-	height: 20px;
-	display: block;
-	margin-bottom: 5px;
-	margin-right: auto;
-	margin-left: auto;
+
+<style scoped>
+.v-application .rounded-bl-xl {
+	border-bottom-left-radius: 300px !important;
 }
 
-.crop-register input {
-	font-family: KoHo, sans-serif;
-	font-size: larger;
-	width: 400px;
-	height: 40px;
-	padding-left: 20px;
-	display: block;
-	margin-bottom: 20px;
-	margin-right: auto;
-	margin-left: auto;
-	border: 1px solid mediumspringgreen;
+.v-application .rounded-br-xl {
+	border-bottom-right-radius: 300px !important;
 }
 
-.crop-register button {
-	color: aliceblue;
-	font-family: KoHo, sans-serif;
-	font-size: larger;
-	width: 320px;
-	height: 40px;
-	border: 1px solid mediumspringgreen;
-	background-color: mediumseagreen;
-	cursor: pointer;
+.custom-color {
+	background-color: #3CB371;
+	/* Cambia el color a tu preferencia */
+	/* Otras propiedades de estilo si es necesario */
+}
+
+.custom-button {
+	color: white;
+	/* Cambia el color del texto a negro o el color deseado */
+	text-decoration: none;
+	/* Evita el subrayado del texto */
+	background-color: #3CB371;
+}
+
+/* Estilo para los botones cuando se seleccionan */
+.custom-button:hover {
+	color: none;
+	/* Cambia el color del texto al seleccionar el botón */
 }
 
 .flexbox-container {
