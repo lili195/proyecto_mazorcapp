@@ -11,13 +11,15 @@
                 </v-row>
                 <v-row justify="center" align="center">
                     <v-col cols="auto">
-                        <v-btn density="compact" variant="text">Inicio</v-btn>
+                        <router-link to="/">
+                            <v-btn class="custom-button" density="compact" variant="text">Inicio</v-btn>
+                        </router-link>
                     </v-col>
                     <v-col cols="auto">
-                        <v-btn density="compact" variant="text">Acerca</v-btn>
+                        <v-btn class="custom-button" density="compact" variant="text">Acerca</v-btn>
                     </v-col>
                     <v-col cols="auto">
-                        <v-btn density="compact" variant="text">Soporte</v-btn>
+                        <v-btn class="custom-button" density="compact" variant="text">Soporte</v-btn>
                     </v-col>
                 </v-row>
                 <v-card class="elevation-6 mt-10">
@@ -32,23 +34,29 @@
                                         </h3>
                                         <v-row align="center" justify="center">
                                             <v-col cols="12" sm="8">
-                                                <v-text-field label="Cédula" outlined dense color="#3CB371"
-                                                    autocomplete="false" class="mt-16" v-model = "state.cc"></v-text-field>
-                                                <v-text-field label="Contraseña" outlined dense color="#3CB371"
-                                                    autocomplete="false" v-model="state.password"
-                                                    :type="showPassword ? 'text' : 'password'"
-                                                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                                                    @click:append="togglePasswordVisibility"></v-text-field>
-                                                <!-- <v-row>
-                                                    <v-col cols="12" sm="7">
-                                                        <v-checkbox label="Recuérdame" class="mt-n1"
-                                                            color="#3CB371"></v-checkbox>
+                                                <v-form>
+                                                    <v-text-field label="Cédula" outlined dense color="#3CB371"
+                                                        autocomplete="false" class="mt-10" v-model="state.cc"
+                                                        :rules="idRules"></v-text-field>
+                                                    <v-text-field label="Contraseña" outlined dense color="#3CB371"
+                                                        autocomplete="false" v-model="state.password" :rules="passwordRules"
+                                                        :type="showPassword ? 'text' : 'password'"
+                                                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                                        @click:append="togglePasswordVisibility"></v-text-field>
+                                                </v-form>
+                                                <v-row>
+                                                    <v-col cols="12" sm="12">
+                                                        <!-- <v-checkbox label="Recuérdame" class="mt-n1"
+                                                            color="#3CB371"></v-checkbox> -->
+                                                        <router-link to="/begin_password_reset">
+                                                            <span style="color: green;">¿Olvidaste tu contraseña?</span>
+                                                        </router-link>
                                                     </v-col>
                                                     <v-col cols="12" sm="5">
-                                                        <span style="color: green;">Recuperar contraseña</span>
                                                     </v-col>
-                                                </v-row> -->
-                                                <v-btn v-on:click="login" color="#3CB371" dark block tile>Ingresar</v-btn>
+                                                </v-row>
+                                                <v-btn class="mt-2" v-on:click="login" color="#3CB371" dark block
+                                                    tile>Ingresar</v-btn>
                                                 <p>
                                                     <span style="color: red; font-size: larger;">{{ state.error }}</span>
                                                 </p>
@@ -65,8 +73,9 @@
                                                 gestionar tus cultivos de mazorca y tener un gran experiencia</h3>
                                         </v-card-text>
                                         <div class="text-center">
-                                            <v-btn style="color:white" variant="outlined"
-                                                @click="step++">Registrarse</v-btn>
+                                            <router-link to="/register">
+                                                <v-btn style="color:white" variant="outlined">Registrarse</v-btn>
+                                            </router-link>
                                         </div>
                                     </div>
                                 </v-col>
@@ -148,8 +157,40 @@ export default {
             password: '',
             showPassword: false,
             step: 1,
-            inputRules: [
-                v => v.length >= 7 || 'La cédula debe ser de al menos 7 dígitos'
+            due: null,
+            idRules: [
+                v => {
+                    if (!v) {
+                        return 'Ingrese su cédula';
+                    }
+                    return true;
+                },
+                v => {
+                    if (!/^\d+$/.test(v)) {
+                        return 'Ingrese dígitos numéricos';
+                    }
+                    return true;
+                },
+                v => {
+                    if (v.length < 7 || v.length > 10) {
+                        return 'Ingrese entre 7 y 10 dígitos';
+                    }
+                    return true;
+                }
+            ],
+            passwordRules: [
+                v => {
+                    if (!v) {
+                        return 'Ingrese su contraseña';
+                    }
+                    return true;
+                },
+                v => {
+                    if (v.length < 6) {
+                        return 'Ingrese al menos 6 caracteres';
+                    }
+                    return true;
+                }
             ]
         };
     },
@@ -172,5 +213,18 @@ export default {
     background-color: #3CB371;
     /* Cambia el color a tu preferencia */
     /* Otras propiedades de estilo si es necesario */
+}
+
+.custom-button {
+    color: black;
+    /* Cambia el color del texto a negro o el color deseado */
+    text-decoration: none;
+    /* Evita el subrayado del texto */
+}
+
+/* Estilo para los botones cuando se seleccionan */
+.custom-button:hover {
+    color: none;
+    /* Cambia el color del texto al seleccionar el botón */
 }
 </style>
