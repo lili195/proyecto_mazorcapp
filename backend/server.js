@@ -193,11 +193,21 @@ app.post('/cropNew', async (req, res) => {
     }
 })
 
-app.get('/followGrowth', async(req, res) => {
-
-
+app.get('/followGrowth', async (req, res) => {
+    try {
+        
+    } catch {
+        
+    }
 
 })
+
+async function getPersonsCrops(id_person) {
+    const crops = await crops.findAll({
+        where: { person_id: id_person },
+    });
+    return crops;
+}
 
 // async function getCropLocation(id_crop) {
 //     const crop = await crops.findOne({
@@ -210,7 +220,6 @@ app.get('/followGrowth', async(req, res) => {
 // } 
 
 //TODO: revisar q el getcroplocation funcione
-
 
 
 
