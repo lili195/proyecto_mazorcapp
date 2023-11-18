@@ -15,9 +15,9 @@
 <script setup>
 import { useRouter } from 'vue-router';
 
-const getPersonId = () => {
-    // recoger del local storage
-}
+// const getPersonId = () => {
+//     // recoger del local storage
+// }
 
 const router = useRouter();
 

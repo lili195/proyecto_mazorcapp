@@ -1,5 +1,6 @@
 const { createPerson } = require('./models/person')
-const { people, crops } = require('./config/db')
+const { people } = require('./config/db')
+const { crops } = require('./config/db')
 const { createCrop } = require('./models/crop')
 
 if (process.env.NODE_ENV !== 'production') {
@@ -194,16 +195,32 @@ app.post('/cropNew', async (req, res) => {
 })
 
 app.get('/followGrowth', async (req, res) => {
+    const personId = req.query.id_person;
+
     try {
-        const crops = await crops.findAll({
-            where: { person_id: req.body.id_person },
+        // Encontrar todos los cultivos asociados a esa persona
+        const cropsInfo = await crops.findAll({
+            where: {
+                id_person: personId,
+            },
         });
-        console.log(crops)
-        res.status(200).send(crops)
-    } catch {
-        res.status(400).send('Error en solicitud')
+
+        // Validar
+        if (cropsInfo) {
+            res.status(200).send(cropsInfo);
+        } else {
+            res.status(400).send('No se encontraron cultivos');
+        }
+    } catch (error) {
+        res.status(500).json({
+            title: 'Error interno del servidor',
+            error: 'Ocurrió un error al procesar la solicitud',
+        });
+        console.error(error);
     }
-})
+});
+
+
 
 // async function getCropLocation(id_crop) {
 //     const crop = await crops.findOne({
