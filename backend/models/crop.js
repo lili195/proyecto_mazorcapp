@@ -1,6 +1,7 @@
 const { crops } = require('../config/db')
 
 const createCrop = async (
+	id_crop,
 	id_person,
 	state_crop,
 	start_date_crop,
@@ -12,6 +13,7 @@ const createCrop = async (
 ) => {
 	try {
 		console.log(
+			id_crop,
 			id_person,
 			state_crop,
 			start_date_crop,
@@ -22,6 +24,7 @@ const createCrop = async (
 			plants_perM2_crop)
 
 		const newCrop = await crops.create({
+			id_crop,
 			id_person,
 			state_crop,
 			start_date_crop,

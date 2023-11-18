@@ -5,8 +5,7 @@ module.exports = (sequelize) => {
 		id_crop: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            primaryKey: true,
-			autoIncrement: true
+            primaryKey: true
         },
 		id_person: {
             type: DataTypes.STRING,

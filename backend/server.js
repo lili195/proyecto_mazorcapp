@@ -10,9 +10,8 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const passport = require('passport')
 const flash = require('express-flash')
-const session = require('express-session')
+const secretkey = process.env.SESSION_SECRET
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const twilio = require('twilio')
@@ -20,14 +19,7 @@ const twilio = require('twilio')
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
-}))
 
-app.use(passport.initialize())
-app.use(passport.session())
 
 app.use(cors({
     origin: 'http://localhost:8080',
@@ -174,11 +166,13 @@ app.post('/login', async (req, res) => {
     }
 })
 
+// recuperar id del cultivo desde el front tambien
 app.post('/cropNew', async (req, res) => {
     console.log("Solicitud recibida de front")
     try {
         console.log(req.body)
         createCrop(
+            req.body.id_crop,
             req.body.id_person,
             'A',
             req.body.start_date,
@@ -219,6 +213,8 @@ app.get('/followGrowth', async (req, res) => {
         console.error(error);
     }
 });
+
+//recuperar id persona, crop y tracking del front
 
 
 

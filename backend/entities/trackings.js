@@ -6,7 +6,6 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
-			autoIncrement: true
         },
         id_crop: {
             type: DataTypes.INTEGER,
@@ -15,6 +14,14 @@ module.exports = (sequelize) => {
                 model: 'crops',
                 key: 'id_crop', 
             }
+        },
+        id_person: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            references: {
+                model: 'people',
+                key: 'id_person', 
+            },
         },
         date_tracking: {
             type: DataTypes.STRING,
