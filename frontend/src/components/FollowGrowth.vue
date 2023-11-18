@@ -37,15 +37,10 @@
                                         <h3 style="color:grey">Ingresa los datos de tu cultivo
                                         </h3>
                                         <v-form>
-                                            <v-menu>
-                                                <template v-slot:activator="{ on }">
-                                                    <v-text-field v-on="on" label="Fecha de siembra"
-                                                        prepend-icon="date_range"></v-text-field>
-                                                </template>
-                                                <v-date-picker v-model="due"></v-date-picker>
-                                            </v-menu>
+                                            <v-text-field class="mt-10" label="Fecha de siembra" prepend-icon="date_range"
+                                                type="date" v-model="due" outlined dense color="#3CB371"></v-text-field>
                                             <v-text-field label="Área total del cultivo (m2)" outlined dense color="#3CB371"
-                                                autocomplete="false" class="mt-10" v-model="cropArea"
+                                                autocomplete="false" v-model="cropArea"
                                                 :rules="cropAreaRules"></v-text-field>
                                             <v-select label="Cantidad de plantas por m2" outlined dense color="#3CB371"
                                                 :items="['2', '3', '4']" v-model="plantsPerSquareMeter"></v-select>
@@ -67,13 +62,6 @@
                                                 </v-col>
                                             </v-row>
                                             <v-btn color="#3CB371" dark block tile>Guardar cultivo</v-btn>
-                                            <!-- <v-menu>
-                                                <template v-slot:activator="{ on }">
-                                                    <v-text-field v-on="on" label="Fecha de siembra"
-                                                        prepend-icon="date_range"></v-text-field>
-                                                    <v-date-picker v-model="due"></v-date-picker>
-                                                </template>
-                                            </v-menu> -->
                                         </v-form>
                                     </v-card-text>
                                 </v-col>
@@ -109,14 +97,14 @@ export default {
     setup() {
         const token = localStorage.getItem('token');
 
-		const checkCredentials = () => {
-			if (localStorage.length === 0 || !token) {
-				alert('Token de inicio de sesión no encontrado')
-				useRouter().push('/');
-			}
-		}
+        const checkCredentials = () => {
+            if (localStorage.length === 0 || !token) {
+                alert('Token de inicio de sesión no encontrado')
+                useRouter().push('/');
+            }
+        }
 
-		checkCredentials();
+        checkCredentials();
 
         const lat = ref(0)
         const lng = ref(0)

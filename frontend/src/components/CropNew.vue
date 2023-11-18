@@ -1,5 +1,5 @@
 <template>
-	<v-container>
+<v-container>
 		<v-row align="center" justify="center">
 			<v-col cols="12" sm="10">
 				<v-row>
@@ -86,122 +86,105 @@
 			</v-col>
 		</v-row>
 	</v-container>
+
 </template>
 
-<script setup>
-//import { onMounted, ref, computed, reactive } from "vue";
-import {ref} from "vue";
-// import useVuelidate from "@vuelidate/core";
-// import { required, minLength, helpers } from '@vuelidate/validators'
-// import L from "leaflet";
-// import axios from 'axios';
-//import { useRouter } from 'vue-router';
-//const router = useRouter();
-const lat = ref(0);
-const lng = ref(0);
-// const map = ref();
-const mapContainer = ref();
-//const token = localStorage.getItem('token');
-
-// const checkCredentials = () => {
-// 	if (localStorage.length === 0 || !token) {
-// 		alert('Token de inicio de sesión no encontrado')
-// 		router.push('/');
-// 	}
-// }
+<script>
+import { onMounted, ref } from 'vue';
+import L from 'leaflet';
 
 
-// export default {
-// 	name: 'CropNew',
-// 	setup() {
-// 		// const router = useRouter();
-// 		const lat = ref(0)
-// 		const lng = ref(0)
-// 		const map = ref()
-// 		const mapContainer = ref()
-// 		// const token = localStorage.getItem('token');
+export default {
+	name: 'CropNew',
+	setup() {
+		// const router = useRouter();
+		const lat = ref(0)
+		const lng = ref(0)
+		const map = ref()
+		const mapContainer = ref()
+		// const token = localStorage.getItem('token');
 
-// 		// const checkCredentials = () => {
-// 		// 	if (localStorage.length === 0 || !token) {
-// 		// 		alert('Token de inicio de sesión no encontrado')
-// 		// 		router.push('/');
-// 		// 	}
-// 		// }
+		// const checkCredentials = () => {
+		// 	if (localStorage.length === 0 || !token) {
+		// 		alert('Token de inicio de sesión no encontrado')
+		// 		router.push('/');
+		// 	}
+		// }
 
-// 		// checkCredentials();
+		// checkCredentials();
 
-// 		onMounted(() => {
-// 			map.value = L.map(mapContainer.value).setView([51.505, -0.09], 13);
-// 			L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-// 				maxZoom: 19,
-// 				attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
-// 			}).addTo(map.value);
+		onMounted(() => {
+			map.value = L.map(mapContainer.value).setView([51.505, -0.09], 13);
+			L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+				maxZoom: 19,
+				attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
+			}).addTo(map.value);
 
-// 			// Obtener la ubicación del usuario
-// 			getLocation();
-// 		});
+			// Obtener la ubicación del usuario
+			getLocation();
+		});
 
-// 		function getLocation() {
-// 			if (navigator.geolocation) {
-// 				navigator.geolocation.watchPosition((position) => {
-// 					lat.value = position.coords.latitude;
-// 					lng.value = position.coords.longitude;
-// 					map.value.setView([lat.value, lng.value], 13);
+		function getLocation() {
+			if (navigator.geolocation) {
+				navigator.geolocation.watchPosition((position) => {
+					lat.value = position.coords.latitude;
+					lng.value = position.coords.longitude;
+					map.value.setView([lat.value, lng.value], 13);
 
-// 					L.marker([lat.value, lng.value], { draggable: true })
-// 						.addTo(map.value)
-// 						.on("draged", (event) => {
-// 							console.log(event);
-// 						});
-// 				});
-// 			}
-// 		}
-// 		return {
-// 			lat,
-// 			lng,
-// 			map,
-// 			mapContainer,
-// 			getLocation,
-// 		};
-// 	},
-// 	data: () => ({
-// 		step: 1,
-// 		due: null,
-// 		cropArea: 0,
-// 		plantsPerSquareMeter: '2',
-// 		totalPlants: 0,
-// 		cropAreaRules: [
-// 			v => {
-// 				if (!v) {
-// 					return 'Ingrese el área';
-// 				}
-// 				return true;
-// 			},
-// 			v => {
-// 				if (!/^\d+$/.test(v)) {
-// 					return 'Ingrese dígitos numéricos';
-// 				}
-// 				return true;
-// 			}
-// 		]
-// 	}),
-// 	watch: {
-// 		cropArea: 'updateTotalPlants',
-// 		plantsPerSquareMeter: 'updateTotalPlants',
-// 	},
-// 	methods: {
-// 		updateTotalPlants() {
-// 			// Convierte los valores a números y realiza la multiplicación
-// 			this.totalPlants = parseInt(this.cropArea) * parseInt(this.plantsPerSquareMeter);
-// 			if (isNaN(this.totalPlants)) {
-// 				this.totalPlants = 0;
-// 			}
-// 		},
-// 	},
-// 	propos: {
-// 		source: String
-// 	},
-// }
+					L.marker([lat.value, lng.value], { draggable: true })
+						.addTo(map.value)
+						.on("draged", (event) => {
+							console.log(event);
+						});
+				});
+			}
+		}
+		return {
+			lat,
+			lng,
+			map,
+			mapContainer,
+			getLocation,
+		};
+	},
+	data: () => ({
+		step: 1,
+		due: null,
+		cropArea: 0,
+		plantsPerSquareMeter: '2',
+		totalPlants: 0,
+		cropAreaRules: [
+			v => {
+				if (!v) {
+					return 'Ingrese el área';
+				}
+				return true;
+			},
+			v => {
+				if (!/^\d+$/.test(v)) {
+					return 'Ingrese dígitos numéricos';
+				}
+				return true;
+			}
+		]
+	}),
+	watch: {
+		cropArea: 'updateTotalPlants',
+		plantsPerSquareMeter: 'updateTotalPlants',
+	},
+	methods: {
+		updateTotalPlants() {
+			// Convierte los valores a números y realiza la multiplicación
+			this.totalPlants = parseInt(this.cropArea) * parseInt(this.plantsPerSquareMeter);
+			if (isNaN(this.totalPlants)) {
+				this.totalPlants = 0;
+			}
+		},
+	},
+	propos: {
+		source: String
+	},
+}
 </script>
 
 <style scoped>
