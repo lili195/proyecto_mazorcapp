@@ -22,8 +22,10 @@
   
 <script setup>
 import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { ref } from 'vue';
+const router = useRouter();
 
 
 const id_person = localStorage.getItem('id_person');
