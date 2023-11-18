@@ -82,7 +82,7 @@ import useValidate from '@vuelidate/core'
 import { required, minLength, maxLength, sameAs, numeric, helpers } from '@vuelidate/validators'
 import axios from 'axios';
 import { computed, reactive } from 'vue';
-import { useRouter } from 'vue-router';
+//import { useRouter } from 'vue-router';
 
 export default {
     name: 'RegisterForm',

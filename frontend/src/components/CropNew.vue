@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { onMounted, ref, computed, reactive } from "vue";
+import { onMounted, ref } from "vue";
 //import useValidate from '@vuelidate/core'
 //import { required, minLength, helpers } from '@vuelidate/validators'
 import L from "leaflet";
