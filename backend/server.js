@@ -63,7 +63,7 @@ app.post('/register', async (req, res) => {
                 bcrypt.hashSync(req.body.password, 10)
             );
 
-            res.status(200).json({
+            res.status(201).json({
                 title: 'Registro exitoso',
             });
             console.log('======================')
@@ -110,7 +110,7 @@ app.post('/checkNum', async (req, res) => {
             let number_person = '+57' + req.body.num
             console.log(otp, number_person)
             sendSMS(otp, number_person)
-            res.status(200).json({
+            res.status(201).json({
                 title: 'Número encontrado, otp enviado',
             });
         } else {
@@ -156,7 +156,7 @@ app.post('/login', async (req, res) => {
         } else {
             console.log('Inicio de sesion exitoso')
             let token = jwt.sign({ id_person: personFound.id_person }, 'secretkey');
-            return res.status(200).json({
+            return res.status(201).json({
                 title: 'Login exitoso',
                 token: token,
                 id_person: personFound.id_person
@@ -195,19 +195,15 @@ app.post('/cropNew', async (req, res) => {
 
 app.get('/followGrowth', async (req, res) => {
     try {
-        
+        const crops = await crops.findAll({
+            where: { person_id: req.body.id_person },
+        });
+        console.log(crops)
+        res.status(200).send(crops)
     } catch {
-        
+        res.status(400).send('Error en solicitud')
     }
-
 })
-
-async function getPersonsCrops(id_person) {
-    const crops = await crops.findAll({
-        where: { person_id: id_person },
-    });
-    return crops;
-}
 
 // async function getCropLocation(id_crop) {
 //     const crop = await crops.findOne({
@@ -220,9 +216,6 @@ async function getPersonsCrops(id_person) {
 // } 
 
 //TODO: revisar q el getcroplocation funcione
-
-
-
 
 const { conn } = require('./config/db')
 
