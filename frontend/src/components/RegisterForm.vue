@@ -24,7 +24,7 @@
         </p>
 
         <p>
-            <input type="text" id="name" v-model="state.name" placeholder="Primer nombre *" />
+            <input type="text" id="name" v-model="state.name" placeholder="Primer nombre*" />
             <span v-if="v$.name.$error">
                 {{ v$.name.$errors[0].$message }}
             </span>
@@ -35,7 +35,7 @@
         </p>
 
         <p>
-            <input type="text" id="number" v-model="state.number" placeholder="Número de teléfono *" />
+            <input type="text" id="number" v-model="state.number" placeholder="Número de teléfono*" />
             <span v-if="v$.number.$error">
                 {{ v$.number.$errors[0].$message }}
             </span>
@@ -47,7 +47,7 @@
 
         <p>
             <input type="password" id="password" v-model="state.password.password"
-                placeholder="Contraseña * (debe tener al menos 6 caracteres)" />
+                placeholder="Contraseña* (debe tener al menos 6 caracteres)" />
             <span v-if="v$.password.password.$error">
                 {{ v$.password.password.$errors[0].$message }}
             </span>
@@ -59,7 +59,7 @@
         </p>
 
         <p>
-            <input type="password" id="confirm" v-model="state.password.confirm" placeholder="Confirmar contraseña *" />
+            <input type="password" id="confirm" v-model="state.password.confirm" placeholder="Confirmar contraseña*" />
             <span v-if="v$.password.confirm.$error">
                 {{ v$.password.confirm.$errors[0].$message }}
             </span>
