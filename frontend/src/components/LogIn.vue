@@ -33,7 +33,10 @@
                                         <v-row align="center" justify="center">
                                             <v-col cols="12" sm="8">
                                                 <v-text-field label="Cédula" outlined dense color="#3CB371"
-                                                    autocomplete="false" class="mt-16" v-model = "state.cc"></v-text-field>
+                                                    autocomplete="false" class="mt-16" v-model="state.cc"></v-text-field>
+                                                <span v-if="v$.cc.$error">
+                                                    {{ v$.cc.$errors[0].$message }}
+                                                </span>
                                                 <v-text-field label="Contraseña" outlined dense color="#3CB371"
                                                     autocomplete="false" v-model="state.password"
                                                     :type="showPassword ? 'text' : 'password'"
@@ -148,10 +151,7 @@ export default {
         return {
             password: '',
             showPassword: false,
-            step: 1,
-            inputRules: [
-                v => v.length >= 7 || 'La cédula debe ser de al menos 7 dígitos'
-            ]
+            step: 1
         };
     },
     props: {

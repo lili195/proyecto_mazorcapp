@@ -1,83 +1,104 @@
 <template>
-	<h1>Mazorcapp</h1>
-	<div>
-		<p>
-			<router-link to="/">Volver a Inicio</router-link>
-		</p>
-	</div>
-	<h2>Registrar nuevo cultivo</h2>
+	<v-container>
+		<v-row align="center" justify="center">
+			<v-col cols="12" sm="10">
+				<v-row>
+					<v-col cols="12">
+						<div style="text-align: center">
+							<v-img :src="require('../assets/mazorcapp_banner.png')" class="my-3" contain height="50" />
+						</div>
+					</v-col>
+				</v-row>
+				<v-row align="center" justify="center">
+					<v-col cols="auto">
+						<v-btn style="background-color: #99cc66; color: white;" density="compact" variant="elevated">
+							<v-icon>mdi-seed</v-icon> Registrar Cultivo
+						</v-btn>
+					</v-col>
+					<v-col cols="auto">
+						<v-btn class="custom-button" density="compact" variant="elevated">
+							<v-icon>mdi-chart-line</v-icon> Seguimiento
+						</v-btn>
+					</v-col>
+					<v-col cols="auto">
+						<v-btn class="custom-button" density="compact" variant="elevated">
+							<v-icon>mdi-file-chart</v-icon> Informes
+						</v-btn>
+					</v-col>
+				</v-row>
+				<v-card class="elevation-6 mt-10">
+					<v-window v-model="step">
+						<v-window-item :value="1">
+							<v-row>
+								<v-col cols="12" sm="6">
+									<v-card-text class="mt-12">
+										<h1 class="text-center">Registra tu cultivo</h1>
+										<br>
+										<h3 style="color:grey">Ingresa los datos de tu cultivo
+										</h3>
+										<v-form ref="formRef" id="form" @submit.prevent="submitCrop">
+											<v-text-field class="mt-10" label="Fecha de siembra" prepend-icon="date_range"
+												type="date" v-model="state.start_date" outlined dense color="#3CB371"
+												:rules="startDateRules"></v-text-field>
+											<v-text-field label="Identificador del cultivo" outlined dense color="#3CB371"
+												autocomplete="false" v-model="state.id_crop"
+												:rules="idCropRules"></v-text-field>
+											<v-text-field label="Área total del cultivo (m2)" outlined dense color="#3CB371"
+												autocomplete="false" v-model="state.area" :rules="areaRules"></v-text-field>
+											<v-select label="Cantidad de plantas por m2" outlined dense color="#3CB371"
+												:items="['2', '3', '4']" v-model="state.plants_m2"
+												:rules="plantsM2Rules"></v-select>
+											<!-- <v-text-field label="Cantidad de plantas a cultivar" outlined dense
+												color="#3CB371" autocomplete="false" v-model="state.plants_num" readonly
+												:rules="plantsNumRules"></v-text-field> -->
 
-	<div class="register">
-		<p>
-			<label><b>Por favor rellene los siguientes campos:</b></label>
-		</p>
-
-		<form>
-			<div>
-				<div>
-					<label>
-						Permita que rastreemos su ubicación para el cultivo que desea registrar antes de continuar.
-					</label>
-				</div>
-				<br>
-				<!-- <button @click="getLocation()">Obtener mi ubicación</button> -->
-
-				<!-- <div>
-					Latitud: {{ markerLat }} , Longitud: {{ markerLng }}
-				</div> -->
-				<div class="flexbox-container">
-					<div ref="mapContainer" style="width: 500px; height: 500px;"></div>
-				</div>
-			</div>
-
-			<p>
-				<label>Identificador del cultivo</label>
-				<input type="text" v-model="state.id_crop" placeholder="Por ejemplo 'cultivo 1'">
-				<span v-if="v$.id_crop.$error">
-					{{ v$.id_crop.$errors[0].$message }}
-				</span>
-			</p>
-
-			<p>
-				<label>Fecha de siembra del cultivo</label>
-				<input type="date" v-model="state.start_date" placeholder="Fecha de siembra del cultivo">
-				<span v-if="v$.start_date.$error">
-					{{ v$.start_date.$errors[0].$message }}
-				</span>
-			</p>
-
-			<p>
-				<label>Área total del cultivo (metros cuadrados)</label>
-				<input type="number" v-model="state.area" placeholder="Área total del cultivo">
-				<span v-if="v$.area.$error">
-					{{ v$.area.$errors[0].$message }}
-				</span>
-			</p>
-
-			<p>
-				<label>Número de plantas a cultivar</label>
-				<input type="number" v-model="state.plants_num" placeholder="Número de plantas a cultivar">
-				<span v-if="v$.plants_num.$error">
-					{{ v$.plants_num.$errors[0].$message }}
-				</span>
-			</p>
-
-			<p>
-				<label>Número de plantas por metro cuadrado</label>
-				<input type="number" v-model="state.plants_m2" placeholder="Número de plantas por metro cuadrado">
-				<span v-if="v$.plants_m2.$error">
-					{{ v$.plants_m2.$errors[0].$message }}
-				</span>
-			</p>
-
-		</form>
-
-		<div>
-			<button v-on:click="submitCrop">Guardar datos</button>
-		</div>
-	</div>
+											<v-row>
+												<v-col>
+													<v-btn v-on:click="updateTotalPlants" color="#3CB371">Obtener
+													total de plantas</v-btn>
+	
+												</v-col>
+												<v-col>
+													<v-chip>{{ state.plants_num }}</v-chip>
+												</v-col>
+											</v-row>
+											<v-row>
+												<v-col cols="12" sm="6">
+													<h4 style="color:grey">Latitud
+													</h4>
+													<v-text-field class="mt-3" outlined dense color="#3CB371"
+														autocomplete="false" readonly>{{ lat }}</v-text-field>
+												</v-col>
+												<v-col cols="12" sm="6">
+													<h4 style="color:grey">Longitud
+													</h4>
+													<v-text-field class="mt-3" outlined dense color="#3CB371"
+														autocomplete="false" readonly>{{ lng }}</v-text-field>
+												</v-col>
+											</v-row>
+											<v-btn v-on:click="submitCrop" color="#3CB371" dark block tile>Guardar
+												cultivo</v-btn>
+										</v-form>
+									</v-card-text>
+								</v-col>
+								<v-col cols="12" sm="6">
+									<v-card-text class="mt-12">
+										<v-row align="center" justify="center">
+											<div class="flexbox-container">
+												<div ref="mapContainer" style="width: 410px; height: 410px;"></div>
+											</div>
+										</v-row>
+									</v-card-text>
+								</v-col>
+							</v-row>
+						</v-window-item>
+					</v-window>
+				</v-card>
+			</v-col>
+		</v-row>
+	</v-container>
 </template>
-  
+
 <script setup>
 import { onMounted, ref, computed, reactive } from "vue";
 import useVuelidate from "@vuelidate/core";
@@ -85,6 +106,7 @@ import { required, minLength, helpers } from '@vuelidate/validators'
 import L from "leaflet";
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+const step = ref(1);
 const router = useRouter();
 const lat = ref(0);
 const lng = ref(0);
@@ -108,7 +130,7 @@ const state = reactive({
 	latitude: '',
 	area: '',
 	plants_num: '',
-	plants_m2: ''
+	plants_m2: 0
 })
 
 const rules = computed(() => {
@@ -170,6 +192,13 @@ const getLocation = () => {
 	}
 }
 
+function updateTotalPlants() {
+	state.plants_num = parseInt(state.area) * parseInt(state.plants_m2);
+	if (isNaN(state.plants_num)) {
+		state.plants_num = 0;
+	}
+}
+
 function submitCrop() {
 	if (!lat.value || !lng.value) {
 		alert('El registro requiere que su ubicación sea especificada en el mapa')
@@ -210,9 +239,8 @@ function submitCrop() {
 		}
 	}
 }
-
 </script>
-  
+
 <style scoped>
 .crop-register label {
 	font-family: KoHo, sans-serif;
