@@ -135,8 +135,8 @@ export default {
 			start_date: '',
 			longitude: '',
 			latitude: '',
-			area: '',
-			plants_num: '',
+			area: 0,
+			plants_num: 0,
 			plants_m2: 0,
 			error: ''
 		})
