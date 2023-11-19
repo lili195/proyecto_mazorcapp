@@ -23,22 +23,31 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { ref } from 'vue';
 const router = useRouter();
-
-
-const id_person = localStorage.getItem('id_person');
+const token = localStorage.getItem('token');
 const crops = ref([]);
 
-const goToCropInfo = (id_crop) => {
-  router.push(`followGrowth/cropsInfo/${id_crop}`);
+const checkCredentials = () => {
+    if (localStorage.length === 0 || !token) {
+        alert('Token de inicio de sesión no encontrado')
+        router.push('/');
+    }
 }
 
-const fetchCrops = async () => {
+checkCredentials();
+
+const goToCropInfo = (id_crop) => {
+    router.push(`followGrowth/cropsInfo/${id_crop}`);
+}
+
+const getCrops = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/followGrowth', {
-            params: {
-                id_person: id_person
+        const config = {
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
             }
-        });
+        };
+        const response = await axios.get('http://localhost:3000/followGrowth', config);
         let data = response.data
         console.log(data);
         crops.value = data
@@ -49,7 +58,7 @@ const fetchCrops = async () => {
 };
 
 onMounted(() => {
-    fetchCrops();
+    getCrops();
 });
 
 </script>
@@ -91,22 +100,22 @@ onMounted(() => {
 }
 
 #contenido {
-  margin: 1%;
-  margin-bottom: 0;
-  background-color: whitesmoke;
-  height: 45vh;
-  width: 98%;
-  border-radius: 3%;
-  border-bottom: 0%;
-  overflow-y: auto;
-  border: 2px solid mediumspringgreen;
+    margin: 1%;
+    margin-bottom: 0;
+    background-color: whitesmoke;
+    height: 45vh;
+    width: 98%;
+    border-radius: 3%;
+    border-bottom: 0%;
+    overflow-y: auto;
+    border: 2px solid mediumspringgreen;
 }
 
 .cultivo-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
 }
 </style>
