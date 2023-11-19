@@ -7,6 +7,7 @@ import FollowGrowth from "./components/FollowGrowth.vue";
 import CheckNumber from "./components/CheckNumber.vue";
 import PasswordrstForm from "./components/PasswordrstForm.vue";
 import ResetToken from "./components/ResetToken.vue"
+import CropsInfo from "./components/CropsInfo.vue"
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
@@ -54,6 +55,11 @@ const routes = [
     name: "ResetToken",
     component: ResetToken,
     path: "/resetToken"
+  },
+  {
+    name: "CropsInfo",
+    component: CropsInfo,
+    path: "/followGrowth/cropsInfo/:id_crop"
   }
 ];
 

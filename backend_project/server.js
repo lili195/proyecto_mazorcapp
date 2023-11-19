@@ -83,7 +83,7 @@ app.post('/register', async (req, res) => {
         });
 
     }
-})
+});
 
 /**
  * Recuperación de contraseña
@@ -135,7 +135,7 @@ app.post('/checkNum', async (req, res) => {
             error: 'Ocurrió un error al procesar la solicitud',
         });
     }
-})
+});
 
 app.post('/login', async (req, res) => {
     try {
@@ -175,7 +175,7 @@ app.post('/login', async (req, res) => {
         });
 
     }
-})
+});
 
 // recuperar id del cultivo desde el front tambien
 
@@ -215,7 +215,7 @@ app.post('/cropNew', auth.authToken, async (req, res) => {
         console.error('Error en solicitud:', error);
         res.status(500).send('Error en solicitud');
     }
-})
+});
 
 app.get('/followGrowth', auth.authToken, async (req, res) => {
     try {
@@ -225,7 +225,6 @@ app.get('/followGrowth', auth.authToken, async (req, res) => {
                 id_person: req.body.id_person,
             },
         });
-
         // Validar
         if (cropsInfo) {
             res.status(200).send(cropsInfo);
@@ -241,6 +240,39 @@ app.get('/followGrowth', auth.authToken, async (req, res) => {
     }
 });
 
+app.get('followGrowth/cropsInfo/:id_crop}', auth.authToken, async (req, res) => {
+    try {
+        const idCrop = req.params.id_crop;
+
+    } catch (error) {
+        console.error('Error en solicitud:', error);
+        res.status(500).json({
+            title: 'Error interno del servidor',
+            error: 'Ocurrió un error al procesar la solicitud',
+        });
+    }
+    // try {
+    //     // Encontrar todos los cultivos asociados a esa persona
+    //     const cropsInfo = await cropsTable.findAll({
+    //         where: {
+    //             id_person: req.body.id_person,
+    //         },
+    //     });
+    //     // Validar
+    //     if (cropsInfo) {
+    //         res.status(200).send(cropsInfo);
+    //     } else {
+    //         res.status(400).send('No se encontraron cultivos');
+    //     }
+    // } catch (error) {
+    //     console.error('Error en solicitud:', error);
+    //     res.status(500).json({
+    //         title: 'Error interno del servidor',
+    //         error: 'Ocurrió un error al procesar la solicitud',
+    //     });
+    // }
+    res.status(200)
+});
 
 
 
@@ -250,8 +282,8 @@ app.get('/followGrowth', auth.authToken, async (req, res) => {
 
 
 
-// colocar true para pruebas (reiniciar la base de datos)
-sequelize.sync({ alter: true }).then(async () => {
+// colocar { alter: true } para pruebas (reiniciar la base de datos)
+sequelize.sync().then(async () => {
     app.listen(3000, () => {
         console.log(`Corriendo en el puerto 3000`)
     })

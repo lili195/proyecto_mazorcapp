@@ -36,13 +36,13 @@
 										<br>
 										<h3 style="color:grey">Ingresa los datos de tu cultivo
 										</h3>
-										<v-form>
+										<v-form :ref="form">
 											<v-text-field class="mt-10" label="Fecha de siembra" prepend-icon="date_range"
 												type="date" v-model="state.start_date" outlined dense color="#3CB371"
 												:rules="startDateRules"></v-text-field>
 											<v-text-field label="Identificador del cultivo" outlined dense color="#3CB371"
 												autocomplete="false" v-model="state.id_crop"
-												:rules="idCropRules"></v-text-field>
+												:rules="[v => !!v || 'Por favor ingrese un identificador']"></v-text-field>
 											<p>
 												<span style="color: red; font-size: larger;">{{ state.error }}</span>
 											</p>
@@ -51,10 +51,6 @@
 											<v-select label="Cantidad de plantas por m2" outlined dense color="#3CB371"
 												:items="['2', '3', '4']" v-model="state.plants_m2"
 												:rules="plantsM2Rules"></v-select>
-											<!-- <v-text-field label="Cantidad de plantas a cultivar" outlined dense
-												color="#3CB371" autocomplete="false" v-model="state.plants_num" readonly
-												:rules="plantsNumRules"></v-text-field> -->
-
 											<v-row>
 												<v-col>
 													<v-btn v-on:click="updateTotalPlants" color="#3CB371">Obtener

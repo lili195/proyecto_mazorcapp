@@ -60,7 +60,6 @@ const getCrops = async () => {
 onMounted(() => {
     getCrops();
 });
-
 </script>
 
 <style scoped>
@@ -102,13 +101,12 @@ onMounted(() => {
 #contenido {
     margin: 1%;
     margin-bottom: 0;
-    background-color: whitesmoke;
+    background-color: palegreen;
     height: 45vh;
     width: 98%;
     border-radius: 3%;
     border-bottom: 0%;
     overflow-y: auto;
-    border: 2px solid mediumspringgreen;
 }
 
 .cultivo-content {
@@ -117,5 +115,41 @@ onMounted(() => {
     justify-content: space-around;
     align-items: center;
     height: 100%;
+}
+
+.cultivos {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.crop-item {
+    width: 30%;
+    margin: 1%;
+    padding: 2vw;
+    background-color: whitesmoke;
+    text-align: center;
+    border-radius: 1vw;
+    margin-right: 7vw;
+    margin-left: 6vw;
+    height: 10vh;
+    font-size: 100%;
+    cursor: pointer;
+}
+
+.crop-item:hover {
+    transform: scale(1.1);
+}
+
+.buttons {
+    background-color: #fee1cc;
+    margin: 1%;
+    margin-top: 0;
+    width: 98%;
+    display: flex;
+    justify-content: space-around;
+    border-bottom-left-radius: 3%;
+    border-bottom-right-radius: 3%;
+    height: 15%;
 }
 </style>

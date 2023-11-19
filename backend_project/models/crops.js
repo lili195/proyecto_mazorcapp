@@ -13,7 +13,6 @@ module.exports = function(sequelize, DataTypes) {
         model: 'people',
         key: 'id_person'
       },
-      unique: true,
       primaryKey: true,
     },
     state_crop: {
