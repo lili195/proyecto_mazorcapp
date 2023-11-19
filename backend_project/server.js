@@ -251,7 +251,7 @@ app.get('/followGrowth', auth.authToken, async (req, res) => {
 
 
 // colocar true para pruebas (reiniciar la base de datos)
-sequelize.sync({ alter: true }).then(async () => {
+sequelize.sync().then(async () => {
     app.listen(3000, () => {
         console.log(`Corriendo en el puerto 3000`)
     })
