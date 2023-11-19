@@ -36,7 +36,7 @@
 										<br>
 										<h3 style="color:grey">Ingresa los datos de tu cultivo
 										</h3>
-										<v-form ref="formRef" id="form" @submit.prevent="submitCrop">
+										<v-form>
 											<v-text-field class="mt-10" label="Fecha de siembra" prepend-icon="date_range"
 												type="date" v-model="state.start_date" outlined dense color="#3CB371"
 												:rules="startDateRules"></v-text-field>
