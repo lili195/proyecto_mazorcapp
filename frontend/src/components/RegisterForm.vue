@@ -1,5 +1,4 @@
 <template>
-    <img alt="Vue logo" src="../assets/logo.png">
     <h2>Registrarme</h2>
     <div class="register">
         <p>

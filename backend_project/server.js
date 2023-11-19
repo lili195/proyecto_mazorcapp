@@ -1,12 +1,9 @@
-const { createPerson } = require('./models/person')
-const { people } = require('./config/db')
-const { crops } = require('./config/db')
-const { createCrop } = require('./models/crop')
-
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
-
+const { Sequelize } = require('sequelize')
+const { createPerson } = require('./queries/person')
+const { createCrop } = require('./queries/crop')
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -15,22 +12,36 @@ const secretkey = process.env.SESSION_SECRET
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const twilio = require('twilio')
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
-
-
 app.use(cors({
     origin: 'http://localhost:8080',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
 }))
 
+import { initModels } from "./models/init-models"
+import * as auth from './authToken'
+
+const sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: './dbMazorcapp.sqlite',
+});
+
+const models = initModels(sequelize);
+
+const peopleTable = models.people;
+const cropsTable = models.crops;
+
+/**
+ * Registro de usuario nuevo
+ */
+
 app.post('/register', async (req, res) => {
     console.log('solicitud recibida de front :)')
     try {
-        const existingPerson = await people.findOne({
+        const existingPerson = await peopleTable.findOne({
             where: {
                 id_person: req.body.cc,
             },
@@ -49,6 +60,7 @@ app.post('/register', async (req, res) => {
         } else {
             // Registro exitoso
             await createPerson(
+                peopleTable,
                 req.body.cc,
                 req.body.name,
                 req.body.number,
@@ -64,6 +76,7 @@ app.post('/register', async (req, res) => {
         }
     } catch (error) {
         // Otro tipo de error
+        console.log(error)
         res.status(500).json({
             title: 'Error interno del servidor',
             error: 'Ocurrió un error al procesar la solicitud',
@@ -71,6 +84,10 @@ app.post('/register', async (req, res) => {
 
     }
 })
+
+/**
+ * Recuperación de contraseña
+ */
 
 async function sendSMS(otp_msg, number_person) {
     const client = new twilio(process.env.TWILIO_SID, process.env.TWILIO_AUHT_TOKEN)
@@ -92,7 +109,7 @@ app.post('/checkNum', async (req, res) => {
     console.log('solicitud de inicio de cambio de contraseña')
     console.log(req.body)
     try {
-        const existingNum = await people.findOne({
+        const existingNum = await peopleTable.findOne({
             where: {
                 number_person: req.body.num,
             },
@@ -120,13 +137,9 @@ app.post('/checkNum', async (req, res) => {
     }
 })
 
-app.post('/password_reset', async (req, res) => {
-
-})
-
 app.post('/login', async (req, res) => {
     try {
-        const personFound = await people.findOne({
+        const personFound = await peopleTable.findOne({
             where: {
                 id_person: req.body.cc,
             },
@@ -151,7 +164,6 @@ app.post('/login', async (req, res) => {
             return res.status(201).json({
                 title: 'Login exitoso',
                 token: token,
-                id_person: personFound.id_person
             })
         }
     } catch (error) {
@@ -166,35 +178,51 @@ app.post('/login', async (req, res) => {
 })
 
 // recuperar id del cultivo desde el front tambien
-app.post('/cropNew', async (req, res) => {
-    console.log("Solicitud recibida de front")
+
+
+app.post('/cropNew', auth.authToken, async (req, res) => {
+    console.log(req.body)
     try {
-        console.log(req.body)
-        createCrop(
-            req.body.id_crop,
-            req.body.id_person,
-            'A',
-            req.body.start_date,
-            req.body.latitude,
-            req.body.longitude,
-            req.body.area,
-            req.body.plants_num,
-            req.body.plants_m2
-        )
-        res.status(201).send('Cultivo registrado con éxito');
-    } catch {
-        res.status(400).send('Error en solicitud');
+        const existingCrop = await cropsTable.findOne({
+            where: {
+                id_person: req.body.id_person,
+                id_crop: req.body.id_crop,
+            },
+        });
+        
+        if(!existingCrop) {
+            console.log('entró!')
+            await createCrop(
+                cropsTable,
+                req.body.id_crop,
+                req.body.id_person,
+                'A',
+                req.body.start_date,
+                req.body.latitude,
+                req.body.longitude,
+                req.body.area,
+                req.body.plants_num,
+                req.body.plants_m2
+            )
+            res.status(201).send('Cultivo registrado con éxito');
+        } else {
+            res.status(400).json({
+                title: 'Error de validación',
+                error: 'Identificador de cultivo ya en uso',
+            });
+        }
+    } catch (error) {
+        console.error('Error en solicitud:', error);
+        res.status(500).send('Error en solicitud');
     }
 })
 
-app.get('/followGrowth', async (req, res) => {
-    const personId = req.query.id_person;
-
+app.get('/followGrowth', auth.authToken, async (req, res) => {
     try {
         // Encontrar todos los cultivos asociados a esa persona
-        const cropsInfo = await crops.findAll({
+        const cropsInfo = await cropsTable.findAll({
             where: {
-                id_person: personId,
+                id_person: req.body.id_person,
             },
         });
 
@@ -205,39 +233,32 @@ app.get('/followGrowth', async (req, res) => {
             res.status(400).send('No se encontraron cultivos');
         }
     } catch (error) {
+        console.error('Error en solicitud:', error);
         res.status(500).json({
             title: 'Error interno del servidor',
             error: 'Ocurrió un error al procesar la solicitud',
         });
-        console.error(error);
     }
 });
 
-//recuperar id persona, crop y tracking del front
 
-// implementar lo del jwt
 
-// diponibles 3 solo tipos de eventos por defecto, no se pueden crear más, la
-// persona los elige por nombre en una check list
-// al almacenarse en eventualidades, se recupera el id asociado al nombre 
 
-// async function getCropLocation(id_crop) {
-//     const crop = await crops.findOne({
-//         where: {
-//             id_crop: id_crop,
-//         }
-//     })
-//     const cropData = crop.get();
-//     console.log(cropData)
-// } 
+// para importar la base de datos ejecutar en la linea de comandos:
+//npx sequelize-auto -o "./models" -d mazorcappDB.sqlite -h localhost -u lili -p 3306 -x 123 -e sqlite
 
-//TODO: revisar q el getcroplocation funcione
 
-const { conn } = require('./config/db')
 
 // colocar true para pruebas (reiniciar la base de datos)
-conn.sync({ force: false }).then(async () => {
+sequelize.sync({ alter: true }).then(async () => {
     app.listen(3000, () => {
         console.log(`Corriendo en el puerto 3000`)
     })
 })
+
+
+
+
+
+
+

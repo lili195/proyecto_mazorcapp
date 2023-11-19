@@ -1,9 +1,6 @@
 <template>
     <div class="followGrowth">
         <h1>Seguimiento de Crecimiento</h1>
-        <p>
-            <img :src="require('../assets/corn_phenology.jpg')" alt="Imagen del proceso de maduración del maíz" />
-        </p>
     </div>
     <div id="title">
         <h1 id="t">Mis cultivos</h1>

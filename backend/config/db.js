@@ -8,6 +8,7 @@ const sequelize = new Sequelize({
   storage: './database.sqlite'
 });
 
+
 /**
  * Crear los modelos en la db
  */

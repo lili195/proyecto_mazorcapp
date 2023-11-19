@@ -5,7 +5,6 @@
 			<router-link to="/">Volver a Inicio</router-link>
 		</p>
 	</div>
-	<img :src="require('../assets/logo.png')" alt="Mazorcapp logo">
 	<h2>Registrar nuevo cultivo</h2>
 
 	<div class="register">
@@ -30,6 +29,14 @@
 					<div ref="mapContainer" style="width: 500px; height: 500px;"></div>
 				</div>
 			</div>
+
+			<p>
+				<label>Identificador del cultivo</label>
+				<input type="text" v-model="state.id_crop" placeholder="Por ejemplo 'cultivo 1'">
+				<span v-if="v$.id_crop.$error">
+					{{ v$.id_crop.$errors[0].$message }}
+				</span>
+			</p>
 
 			<p>
 				<label>Fecha de siembra del cultivo</label>
@@ -95,6 +102,7 @@ const checkCredentials = () => {
 checkCredentials();
 
 const state = reactive({
+	id_crop: '',
 	start_date: '',
 	longitude: '',
 	latitude: '',
@@ -105,6 +113,9 @@ const state = reactive({
 
 const rules = computed(() => {
 	return {
+		id_crop: {
+			required: helpers.withMessage('Porfavor ingrese un identificador', required),
+		},
 		start_date: {
 			required: helpers.withMessage('Porfavor elija una fecha de inicio de siembra', required),
 		},
@@ -123,7 +134,7 @@ const rules = computed(() => {
 	}
 })
 
-const v$ = useVuelidate(rules,state)
+const v$ = useVuelidate(rules, state)
 
 
 
@@ -166,7 +177,7 @@ function submitCrop() {
 		v$.value.$validate()
 		if (!v$.value.$error) {
 			const userCrop = {
-				id_person: localStorage.getItem('id_person'),
+				id_crop: state.id_crop,
 				start_date: state.start_date,
 				longitude: lng.value,
 				latitude: lat.value,
@@ -174,13 +185,14 @@ function submitCrop() {
 				plants_num: state.plants_num,
 				plants_m2: state.plants_m2,
 			};
-
 			try {
-				axios.post('http://localhost:3000/cropNew', userCrop, {
+				const config = {
 					headers: {
 						'Authorization': token,
+						'Content-Type': 'application/json'
 					}
-				})
+				};
+				axios.post('http://localhost:3000/cropNew', userCrop, config)
 					.then(response => {
 						console.log('Cultivo registrado con éxito', response.data);
 						alert('Datos guardados con éxito')
