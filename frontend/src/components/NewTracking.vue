@@ -10,12 +10,12 @@
         </v-row>
         <v-row>
             <v-col cols="12">
-                <v-select label="Etapa del cultivo" v-model="etapa" :items="etapas"></v-select>
+                <v-select label="Etapa del cultivo" v-model="data.etapa" :items="etapas"></v-select>
             </v-col>
         </v-row>
         <v-row>
             <v-col cols="12">
-                <v-select label="Estado del suelo" v-model="suelo" :items="suelos"></v-select>
+                <v-select label="Estado del suelo" v-model="data.suelo" :items="suelos"></v-select>
             </v-col>
         </v-row>
         <v-row>
@@ -26,18 +26,20 @@
     </v-form>
 </template>
   
-<script>
+<script setup>
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { reactive } from 'vue';
+
 const router = useRouter();
 const token = localStorage.getItem('token');
 
 const checkCredentials = () => {
     if (localStorage.length === 0 || !token) {
-        alert('Token de inicio de sesión no encontrado')
+        alert('Token de inicio de sesión no encontrado');
         router.push('/');
     }
-}
+};
 
 checkCredentials();
 
@@ -52,35 +54,33 @@ const suelos = [
     "Seco",
     "Húmedo",
     "Inundado",
-]
-export default {
-    data() {
-        return {
-            etapas,
-            suelos,
-            id_tracking: '',
-            fecha: '2023-11-20',
-            etapa: etapas[0],
-            suelo: suelos[0],
-        };
-    },
-    methods: {
-        submitTracking() {
-            console.log(this.id_tracking, this.fecha, this.etapa, this.suelo)
-            axios.post(`/followGrowth/newTracking/${id_crop}`, {
-                id_person,
-                date: fecha.toISOString(),
-                fase,
-                dirtState,
-            })
-                .then((response) => {
-                    console.log(response);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
-    },
+];
+
+const data = reactive({
+    etapas,
+    suelos,
+    id_tracking: '',
+    fecha: '20-11-2023',
+    etapa: etapas[0],
+    suelo: suelos[0],
+});
+
+const submitTracking = () => {
+    const id_crop = parseInt(router.currentRoute.value.params.id);
+    console.log(data.id_tracking, data.fecha, data.etapa, data.suelo);
+    axios.post(`/followGrowth/newTracking/${id_crop}`, {
+        id_tracking: data.id_tracking,
+        fecha: data.fecha,
+        etapa: data.etapa,
+        suelo: data.suelo,
+    })
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 };
 </script>
+
   

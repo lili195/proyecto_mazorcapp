@@ -365,13 +365,13 @@ const getDatasFromAPI = async (latitude, longitude) => {
 
 
 
-console.log(getWeatherDatas('1234567890', 'cult 2')
-    .then(weatherData => {
-        console.log(weatherData);
-    })
-    .catch(error => {
-        console.error('Error fetching weather data:', error);
-    }))
+// console.log(getWeatherDatas('1234567890', 'cult 2')
+//     .then(weatherData => {
+//         console.log(weatherData);
+//     })
+//     .catch(error => {
+//         console.error('Error fetching weather data:', error);
+//     }))
 
 
 
