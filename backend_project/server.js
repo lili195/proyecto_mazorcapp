@@ -252,6 +252,49 @@ app.get('/followGrowth', auth.authToken, async (req, res) => {
     }
 });
 
+/***
+ * Solicitud para editar un cultivo
+ */
+
+app.put('/followGrowth/cropsInfo/editCrop/:id_crop}', auth.authToken, async (req, res) => {
+    console.log(req.body)
+    res.status(200).send('Los datos se actualizaron correctamente');
+    // try {
+    //     const idCrop = req.params["id_crop}"];
+    //     // Validar datos
+    //     const { state_crop, start_date_crop, plants_totalNum_crop, plants_perM2_crop } = req.body;
+    //     if (!idCrop || !state_crop || !start_date_crop || !plants_totalNum_crop || !plants_perM2_crop) {
+    //       return res.status(400).send('Los datos son inválidos');
+    //     }
+    
+    //     // Buscar el registro
+    //     const crop = await cropsTable.findOne({
+    //       where: {
+    //         id_crop: idCrop,
+    //       },
+    //     });
+    
+    //     if (!crop) {
+    //       return res.status(404).send('No se encontró el cultivo');
+    //     }
+    
+    //     // // Actualizar la base de datos
+    //     // await cropsTable.update({
+          
+    //     // });
+    
+    //     // Enviar respuesta
+    //     res.status(200).send('Los datos se actualizaron correctamente');
+    //   } catch (error) {
+    //     console.error('Error en solicitud:', error);
+    //     res.status(500).json({
+    //       title: 'Error interno del servidor',
+    //       error: 'Ocurrió un error al procesar la solicitud',
+    //     });
+    //   }
+});
+
+
 /**
  * Registro de nuevo seguimiento
  */
@@ -311,7 +354,9 @@ const saveWather = async (id_person, id_crop) => {
  */
 
 app.get('/followGrowth/cropsInfo/:id_crop}', auth.authToken, async (req, res) => {
-
+    const idCrop = req.params["id_crop}"];
+    console.log(idCrop)
+    res.status(200).send(idCrop)
 });
 
 

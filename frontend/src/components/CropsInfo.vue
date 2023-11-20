@@ -11,7 +11,7 @@
                 <h1 id="t">Información</h1>
             </v-col>
             <v-col>
-                <v-btn @click="edit">Editar</v-btn>
+                <v-btn @click="goToEditCrop">Editar</v-btn>
             </v-col>
         </v-row>
 
@@ -35,11 +35,14 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-//import axios from 'axios';
-//import { ref } from 'vue';
+import axios from 'axios';
+import { ref } from 'vue';
 const router = useRouter();
 const token = localStorage.getItem('token');
-//const crops = ref([]);
+const id_crop = router.currentRoute.value.params.id_crop;
+const crop = ref([]);
+
+console.log(id_crop)
 
 const checkCredentials = () => {
     if (localStorage.length === 0 || !token) {
@@ -55,21 +58,21 @@ const goToEditCrop = (id_crop) => {
 }
 
 const getCrops = async () => {
-    // try {
-    //     // const config = {
-    //     //     headers: {
-    //     //         'Authorization': token,
-    //     //         'Content-Type': 'application/json'
-    //     //     }
-    //     // };
-    //     // const response = await axios.get('http://localhost:3000//followGrowth/cropsInfo/:id_crop}', config);
-    //     // let data = response.data
-    //     // console.log(data);
-    //     // crops.value = data
-    // } catch (error) {
-    //     console.error(error.response);
-    //     alert('No se pudo obtener la información de los cultivos.');
-    // }
+    try {
+        const config = {
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            }
+        };
+        const response = await axios.get(`http://localhost:3000/followGrowth/cropsInfo/${id_crop}`, config);
+        let data = response.data
+        console.log(data);
+        crop.value = data
+    } catch (error) {
+        console.error(error.response);
+        alert('No se pudo obtener la información de los cultivos.');
+    }
 };
 
 onMounted(() => {

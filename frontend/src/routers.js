@@ -9,6 +9,7 @@ import PasswordrstForm from "./components/PasswordrstForm.vue";
 import ResetToken from "./components/ResetToken.vue"
 import CropsInfo from "./components/CropsInfo.vue"
 import NewTracking from "./components/NewTracking.vue"
+import EditCrop from "./components/EditCrop.vue"
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
@@ -66,6 +67,11 @@ const routes = [
     name: "NewTracking",
     component: NewTracking,
     path: "/followGrowth/newTracking/:id_crop"
+  },
+  {
+    name: "EditCrop",
+    component: EditCrop,
+    path: "/followGrowth/cropsInfo/editCrop/:id_crop"
   }
 ];
 
