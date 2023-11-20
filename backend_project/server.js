@@ -4,6 +4,8 @@ if (process.env.NODE_ENV !== 'production') {
 const { Sequelize } = require('sequelize')
 const { createPerson } = require('./queries/person')
 const { createCrop } = require('./queries/crop')
+const { saveWeatherDatas } = require('./queries/weatherDatas')
+const { createTracking } = require('./queries/trackings')
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -33,6 +35,8 @@ const models = initModels(sequelize);
 
 const peopleTable = models.people;
 const cropsTable = models.crops;
+const trackingsTable = models.trackings;
+const weatherTable = models.weather;
 
 /**
  * Registro de usuario nuevo
@@ -81,7 +85,6 @@ app.post('/register', async (req, res) => {
             title: 'Error interno del servidor',
             error: 'Ocurrió un error al procesar la solicitud',
         });
-
     }
 });
 
@@ -137,6 +140,10 @@ app.post('/checkNum', async (req, res) => {
     }
 });
 
+/**
+ * Ingreso a la app
+ */
+
 app.post('/login', async (req, res) => {
     try {
         const personFound = await peopleTable.findOne({
@@ -177,8 +184,9 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// recuperar id del cultivo desde el front tambien
-
+/**
+ * Registro de nuevo cultivo
+ */
 
 app.post('/cropNew', auth.authToken, async (req, res) => {
     console.log(req.body)
@@ -217,6 +225,10 @@ app.post('/cropNew', auth.authToken, async (req, res) => {
     }
 });
 
+/**
+ * Obtencion de los cultivos de una persona
+ */
+
 app.get('/followGrowth', auth.authToken, async (req, res) => {
     try {
         // Encontrar todos los cultivos asociados a esa persona
@@ -240,43 +252,57 @@ app.get('/followGrowth', auth.authToken, async (req, res) => {
     }
 });
 
-app.get('followGrowth/cropsInfo/:id_crop}', auth.authToken, async (req, res) => {
-    try {
-        const idCrop = req.params.id_crop;
+/**
+ * Registro de nuevo seguimiento
+ */
 
-    } catch (error) {
-        console.error('Error en solicitud:', error);
-        res.status(500).json({
-            title: 'Error interno del servidor',
-            error: 'Ocurrió un error al procesar la solicitud',
+app.post('/followGrowth/newTracking/:id_crop}', auth.authToken, async (req, res) => {
+    const idCrop = req.params["id_crop}"];
+    const idPerson = req.body.id_person;
+    const date = req.body.date;
+    const fase = req.body.fase;
+    const dirtState = req.body.dirt;
+
+    try {
+        const existingCrop = await cropsTable.findOne({
+            where: {
+                id_person: idPerson,
+                id_crop: idCrop,
+            },
         });
+        saveWather(idPerson, idCrop)
+    } catch (error) {
+
     }
-    // try {
-    //     // Encontrar todos los cultivos asociados a esa persona
-    //     const cropsInfo = await cropsTable.findAll({
-    //         where: {
-    //             id_person: req.body.id_person,
-    //         },
-    //     });
-    //     // Validar
-    //     if (cropsInfo) {
-    //         res.status(200).send(cropsInfo);
-    //     } else {
-    //         res.status(400).send('No se encontraron cultivos');
-    //     }
-    // } catch (error) {
-    //     console.error('Error en solicitud:', error);
-    //     res.status(500).json({
-    //         title: 'Error interno del servidor',
-    //         error: 'Ocurrió un error al procesar la solicitud',
-    //     });
-    // }
-    res.status(200)
+
+
+
 });
+
+const saveWather = async (id_person, id_crop) => {
+    const datas = getWeatherDatas(id_person, id_crop)
+        .then(weatherData => {
+            console.log(weatherData);
+        })
+        .catch(error => {
+            console.error('Error fetching weather data:', error);
+        })
+    
+}
+
+/**
+ * Obtencion de datos de seguimientos
+ * 
+ */
+
+app.get('/followGrowth/cropsInfo/:id_crop}', auth.authToken, async (req, res) => {
+
+});
+
+
 
 const getWeatherDatas = async (id_person, id_crop) => {
     console.log(id_person, id_crop);
-
     try {
         const cropData = await cropsTable.findOne({
             where: {
@@ -312,8 +338,7 @@ const getDatasFromAPI = async (latitude, longitude) => {
         const data = await response.json();
 
         return {
-            city: data['city'],
-            temp: data['list'][0]['main']['temp']-273.15,
+            temp: data['list'][0]['main']['temp'] - 273.15,
             hum: data['list'][0]['main']['humidity'] + '%',
             wind: data['list'][0]['wind']['speed'] * 1.852,
             clouds: data['list'][0]['weather'][0]['description']
@@ -323,13 +348,15 @@ const getDatasFromAPI = async (latitude, longitude) => {
     }
 };
 
+
+
 console.log(getWeatherDatas('1234567890', 'cult 2')
-.then(weatherData => {
-    console.log(weatherData);
-})
-.catch(error => {
-    console.error('Error fetching weather data:', error);
-}))
+    .then(weatherData => {
+        console.log(weatherData);
+    })
+    .catch(error => {
+        console.error('Error fetching weather data:', error);
+    }))
 
 
 

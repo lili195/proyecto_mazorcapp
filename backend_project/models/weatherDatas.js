@@ -23,7 +23,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: true
     },
-    rainfall_datas: {
+    cloud_datas: {
       type: DataTypes.STRING(40),
       allowNull: false,
       unique: true
