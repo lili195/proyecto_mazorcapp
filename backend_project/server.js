@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
-const { Sequelize } = require('sequelize')
+const { Sequelize, QueryError } = require('sequelize')
 const { createPerson } = require('./queries/person')
 const { createCrop } = require('./queries/crop')
 const { saveWeatherDatas } = require('./queries/weatherDatas')
@@ -270,13 +270,18 @@ app.post('/followGrowth/newTracking/:id_crop}', auth.authToken, async (req, res)
                 id_crop: idCrop,
             },
         });
-        saveWather(idPerson, idCrop)
+        if (existingCrop) {
+            saveWather(idPerson, idCrop)
+        } else {
+            res.status(400).send('No se encontraron cultivos asociados');
+        }
     } catch (error) {
-
+        console.error('Error en solicitud:', error);
+        res.status(500).json({
+            title: 'Error interno del servidor',
+            error: 'Ocurrió un error al procesar la solicitud',
+        }); 
     }
-
-
-
 });
 
 const saveWather = async (id_person, id_crop) => {
@@ -285,9 +290,19 @@ const saveWather = async (id_person, id_crop) => {
             console.log(weatherData);
         })
         .catch(error => {
-            console.error('Error fetching weather data:', error);
+            console.error('Error obteniendo los datos:', error);
         })
-    
+    await saveWeatherDatas(
+        datas.temp,
+        datas.hum,
+        datas.wind,
+        datas.clouds
+    ).then(weatherData => {
+        console.log('Registro exitoso de datos clima: ', weatherData);
+    })
+    .catch(error => {
+        console.error('Error insertando datos de clima:', error)
+    })
 }
 
 /**
@@ -300,7 +315,7 @@ app.get('/followGrowth/cropsInfo/:id_crop}', auth.authToken, async (req, res) =>
 });
 
 
-
+// Obtener datos meteorológicos para ese cultivo
 const getWeatherDatas = async (id_person, id_crop) => {
     console.log(id_person, id_crop);
     try {

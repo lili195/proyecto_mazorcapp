@@ -28,6 +28,7 @@
   
 <script>
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 const router = useRouter();
 const token = localStorage.getItem('token');
 
@@ -58,14 +59,26 @@ export default {
             etapas,
             suelos,
             id_tracking: '',
-            fecha: new Date(),
+            fecha: '2023-11-20',
             etapa: etapas[0],
             suelo: suelos[0],
         };
     },
     methods: {
         submitTracking() {
-            console.log(this.id_tracking,this.fecha, this.etapa, this.suelo)
+            console.log(this.id_tracking, this.fecha, this.etapa, this.suelo)
+            axios.post(`/followGrowth/newTracking/${id_crop}`, {
+                id_person,
+                date: fecha.toISOString(),
+                fase,
+                dirtState,
+            })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         },
     },
 };
