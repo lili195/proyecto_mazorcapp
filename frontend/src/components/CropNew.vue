@@ -1,5 +1,5 @@
 <template>
-<v-container>
+	<v-container>
 		<v-row align="center" justify="center">
 			<v-col cols="12" sm="10">
 				<v-row>
@@ -86,7 +86,6 @@
 			</v-col>
 		</v-row>
 	</v-container>
-
 </template>
 
 <script>
@@ -133,7 +132,9 @@ export default {
 
 					L.marker([lat.value, lng.value], { draggable: true })
 						.addTo(map.value)
-						.on("draged", (event) => {
+						.on("dragend", (event) => {
+							lng.value = event.target.getLatLng().lng;
+							lat.value = event.target.getLatLng().lat;
 							console.log(event);
 						});
 				});
