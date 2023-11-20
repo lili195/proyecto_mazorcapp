@@ -1,19 +1,30 @@
 <template>
-    <div>
-        <h1>Seguimiento de {{ id_crop }}</h1>
+    <div class="followGrowth">
+        <img img :src="require('../assets/mazorcapp_banner.png')" alt="Mazorcapp banner">
     </div>
-
+    <div id="title">
+        <h1 id="t">Mis cultivos</h1>
+        <div id="contenido">
+            <div class="cultivos">
+                <div v-for="crop in crops" :key="crop.id_crop" class="crop-item" @click="goToCropInfo(crop.id_crop)">
+                    <div class="cultivo-content">
+                        <h1>ID: {{ crop.id_crop }}</h1>
+                        <p>N° plantas {{ crop.plants_totalNum_crop }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
-
+  
 <script setup>
 import { onMounted } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
+import { ref } from 'vue';
 const router = useRouter();
 const token = localStorage.getItem('token');
-import { ref } from 'vue';
 const crops = ref([]);
-//const cropId = parseInt(router.currentRoute.value.params.id);
 
 const checkCredentials = () => {
     if (localStorage.length === 0 || !token) {
@@ -24,6 +35,10 @@ const checkCredentials = () => {
 
 checkCredentials();
 
+const goToCropInfo = (id_crop) => {
+    router.push(`followGrowth/cropsInfo/${id_crop}`);
+}
+
 const getCrops = async () => {
     try {
         const config = {
@@ -32,10 +47,10 @@ const getCrops = async () => {
                 'Content-Type': 'application/json'
             }
         };
-        const response = await axios.get('http://localhost:3000/followGrowth/cropsInfo/:id_crop}', config);
-        let data = response.data
-        console.log(data);
-        crops.value = data
+        // const response = await axios.get('http://localhost:3000//followGrowth/cropsInfo/:id_crop}', config);
+        // let data = response.data
+        // console.log(data);
+        // crops.value = data
     } catch (error) {
         console.error(error.response);
         alert('No se pudo obtener la información de los cultivos.');
@@ -46,3 +61,95 @@ onMounted(() => {
     getCrops();
 });
 </script>
+
+<style scoped>
+.followGrowth label {
+    font-family: KoHo, sans-serif;
+    font-size: larger;
+    width: 400px;
+    height: 20px;
+    display: block;
+    margin-bottom: 5px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.followGrowth button {
+    color: aliceblue;
+    font-family: KoHo, sans-serif;
+    font-size: larger;
+    width: 320px;
+    height: 40px;
+    border: 1px solid mediumspringgreen;
+    background-color: mediumseagreen;
+    cursor: pointer;
+}
+
+.followGrowth input {
+    font-family: KoHo, sans-serif;
+    font-size: larger;
+    width: 400px;
+    height: 40px;
+    padding-left: 20px;
+    display: block;
+    margin-bottom: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    border: 1px solid mediumspringgreen;
+}
+
+#contenido {
+    margin: 1%;
+    margin-bottom: 0;
+    background-color: palegreen;
+    height: 45vh;
+    width: 98%;
+    border-radius: 3%;
+    border-bottom: 0%;
+    overflow-y: auto;
+}
+
+.cultivo-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+
+.cultivos {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.crop-item {
+    width: 30%;
+    margin: 1%;
+    padding: 2vw;
+    background-color: whitesmoke;
+    text-align: center;
+    border-radius: 1vw;
+    margin-right: 7vw;
+    margin-left: 6vw;
+    height: 10vh;
+    font-size: 100%;
+    cursor: pointer;
+}
+
+.crop-item:hover {
+    transform: scale(1.1);
+}
+
+.buttons {
+    background-color: #fee1cc;
+    margin: 1%;
+    margin-top: 0;
+    width: 98%;
+    display: flex;
+    justify-content: space-around;
+    border-bottom-left-radius: 3%;
+    border-bottom-right-radius: 3%;
+    height: 15%;
+}
+</style>
