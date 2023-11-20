@@ -20,11 +20,11 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
-import { ref } from 'vue';
+//import axios from 'axios';
+//import { ref } from 'vue';
 const router = useRouter();
 const token = localStorage.getItem('token');
-const crops = ref([]);
+//const crops = ref([]);
 
 const checkCredentials = () => {
     if (localStorage.length === 0 || !token) {
@@ -41,12 +41,12 @@ const goToCropInfo = (id_crop) => {
 
 const getCrops = async () => {
     try {
-        const config = {
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
-            }
-        };
+        // const config = {
+        //     headers: {
+        //         'Authorization': token,
+        //         'Content-Type': 'application/json'
+        //     }
+        // };
         // const response = await axios.get('http://localhost:3000//followGrowth/cropsInfo/:id_crop}', config);
         // let data = response.data
         // console.log(data);
