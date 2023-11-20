@@ -182,9 +182,8 @@ export default {
 					L.marker([lat.value, lng.value], { draggable: true })
 						.addTo(map.value)
 						.on("dragend", (event) => {
-							lng.value = event.target.getLatLng().lat;
-							lat.value = event.target.getLatLng().lng;
-
+							lng.value = event.target.getLatLng().lng;
+							lat.value = event.target.getLatLng().lat;
 							console.log(`Latitud: ${lat.value}, Longitud: ${lng.value}`);
 						});
 				});

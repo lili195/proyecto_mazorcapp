@@ -312,9 +312,10 @@ const getDatasFromAPI = async (latitude, longitude) => {
         const data = await response.json();
 
         return {
-            temp: Math.round(data['list'][0]['main']['temp']),
-            hum: data['list'][0]['main']['humidity'],
-            wind: data['list'][0]['wind']['speed'],
+            city: data['city'],
+            temp: data['list'][0]['main']['temp']-273.15,
+            hum: data['list'][0]['main']['humidity'] + '%',
+            wind: data['list'][0]['wind']['speed'] * 1.852,
             clouds: data['list'][0]['weather'][0]['description']
         };
     } catch (error) {
@@ -322,16 +323,15 @@ const getDatasFromAPI = async (latitude, longitude) => {
     }
 };
 
-
-
-console.log(getWeatherDatas('1234567890', 'cult 1')
+console.log(getWeatherDatas('1234567890', 'cult 2')
 .then(weatherData => {
     console.log(weatherData);
 })
 .catch(error => {
     console.error('Error fetching weather data:', error);
-})
-)
+}))
+
+
 
 
 // para importar la base de datos ejecutar en la linea de comandos:
