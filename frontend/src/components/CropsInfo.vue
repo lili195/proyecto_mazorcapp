@@ -1,20 +1,35 @@
 <template>
-    <div class="followGrowth">
-        <img img :src="require('../assets/mazorcapp_banner.png')" alt="Mazorcapp banner">
-    </div>
-    <div id="title">
-        <h1 id="t">Mis cultivos</h1>
-        <div id="contenido">
-            <div class="cultivos">
-                <div v-for="crop in crops" :key="crop.id_crop" class="crop-item" @click="goToCropInfo(crop.id_crop)">
-                    <div class="cultivo-content">
-                        <h1>ID: {{ crop.id_crop }}</h1>
-                        <p>N° plantas {{ crop.plants_totalNum_crop }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <v-container>
+        <v-row class="followGrowth">
+            <v-col>
+                <img img :src="require('../assets/mazorcapp_banner.png')" alt="Mazorcapp banner">
+            </v-col>
+        </v-row>
+
+        <v-row id="title">
+            <v-col>
+                <h1 id="t">Información</h1>
+            </v-col>
+            <v-col>
+                <v-btn @click="edit">Editar</v-btn>
+            </v-col>
+        </v-row>
+
+        <v-row id="contenido">
+            <v-col>
+                <v-row class="cultivos">
+                    <v-col v-for="crop in crops" :key="crop.id_crop" @click="goToEditCrop(crop.id_crop)">
+                        <v-card class="crop-item">
+                            <v-card-text>
+                                <h1>ID: {{ crop.id_crop }}</h1>
+                                <p>N° plantas {{ crop.plants_totalNum_crop }}</p>
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
   
 <script setup>
@@ -35,26 +50,26 @@ const checkCredentials = () => {
 
 checkCredentials();
 
-const goToCropInfo = (id_crop) => {
-    router.push(`followGrowth/cropsInfo/${id_crop}`);
+const goToEditCrop = (id_crop) => {
+    router.push(`/followGrowth/cropsInfo/editCrop/${id_crop}`);
 }
 
 const getCrops = async () => {
-    try {
-        // const config = {
-        //     headers: {
-        //         'Authorization': token,
-        //         'Content-Type': 'application/json'
-        //     }
-        // };
-        // const response = await axios.get('http://localhost:3000//followGrowth/cropsInfo/:id_crop}', config);
-        // let data = response.data
-        // console.log(data);
-        // crops.value = data
-    } catch (error) {
-        console.error(error.response);
-        alert('No se pudo obtener la información de los cultivos.');
-    }
+    // try {
+    //     // const config = {
+    //     //     headers: {
+    //     //         'Authorization': token,
+    //     //         'Content-Type': 'application/json'
+    //     //     }
+    //     // };
+    //     // const response = await axios.get('http://localhost:3000//followGrowth/cropsInfo/:id_crop}', config);
+    //     // let data = response.data
+    //     // console.log(data);
+    //     // crops.value = data
+    // } catch (error) {
+    //     console.error(error.response);
+    //     alert('No se pudo obtener la información de los cultivos.');
+    // }
 };
 
 onMounted(() => {
@@ -101,7 +116,7 @@ onMounted(() => {
 #contenido {
     margin: 1%;
     margin-bottom: 0;
-    background-color: palegreen;
+    background-color: whitesmoke;
     height: 45vh;
     width: 98%;
     border-radius: 3%;
