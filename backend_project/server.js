@@ -160,7 +160,7 @@ app.post('/login', async (req, res) => {
             });
         } else {
             console.log('Inicio de sesion exitoso')
-            let token = jwt.sign({ id_person: personFound.id_person }, secretkey, {expiresIn: '10h'});
+            let token = jwt.sign({ id_person: personFound.id_person }, secretkey, { expiresIn: '10h' });
             return res.status(201).json({
                 title: 'Login exitoso',
                 token: token,
@@ -189,8 +189,8 @@ app.post('/cropNew', auth.authToken, async (req, res) => {
                 id_crop: req.body.id_crop,
             },
         });
-        
-        if(!existingCrop) {
+
+        if (!existingCrop) {
             console.log('entró!')
             await createCrop(
                 cropsTable,
@@ -274,7 +274,64 @@ app.get('followGrowth/cropsInfo/:id_crop}', auth.authToken, async (req, res) => 
     res.status(200)
 });
 
+const getWeatherDatas = async (id_person, id_crop) => {
+    console.log(id_person, id_crop);
 
+    try {
+        const cropData = await cropsTable.findOne({
+            where: {
+                id_person: id_person,
+                id_crop: id_crop,
+            },
+        });
+
+        if (cropData) {
+            let latitude, longitude; // Declare variables inside the if block
+
+            if (cropData.latitude_crop && cropData.longitude_crop) {
+                latitude = cropData.latitude_crop;
+                longitude = cropData.longitude_crop;
+
+                const weatherData = await getDatasFromAPI(latitude, longitude);
+                return weatherData; // Return weather data after waiting for the API call
+            } else {
+                console.log('Latitude or longitude data not found for this crop');
+            }
+        } else {
+            console.log('No crop found with the specified id_crop');
+        }
+    } catch (error) {
+        console.error('Error finding crop:', error);
+    }
+};
+
+const getDatasFromAPI = async (latitude, longitude) => {
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=6844717cc493fe6fc1efdfcae8f0730d&lang=es`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        return {
+            temp: Math.round(data['list'][0]['main']['temp']),
+            hum: data['list'][0]['main']['humidity'],
+            wind: data['list'][0]['wind']['speed'],
+            clouds: data['list'][0]['weather'][0]['description']
+        };
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+
+
+console.log(getWeatherDatas('1234567890', 'cult 1')
+.then(weatherData => {
+    console.log(weatherData);
+})
+.catch(error => {
+    console.error('Error fetching weather data:', error);
+})
+)
 
 
 // para importar la base de datos ejecutar en la linea de comandos:

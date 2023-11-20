@@ -1,5 +1,5 @@
 <template>
-    <img alt="Vue logo" src="../assets/logo.png">
+    <img alt="Vue logo" :src="require('../assets/mazorcapp_banner.png')">
     <h2>Ingresa tu nueva contraseña</h2>
 
     <div class="passwordReset">
@@ -25,7 +25,7 @@
         </p>
 
         <div>
-            <button v-on:click="resetReq">Guardar datos</button>
+            <button v-on:click="resetReq">Recuperar</button>
         </div>
     </div>
 </template>

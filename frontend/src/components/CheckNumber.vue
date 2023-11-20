@@ -1,5 +1,5 @@
 <template>
-    <img alt="Vue logo" src="../assets/logo.png">
+    <img alt="Vue logo" :src="require('../assets/mazorcapp_banner.png')">
     <h2>Recuperar mi contraseña</h2>
     <div class="checkNum">
         <p>
@@ -7,7 +7,7 @@
         </p>
 
         <p>
-            <b> Le será enviado un mensaje con un conjunto de 4 <br> 
+            <b> Le será enviado un mensaje con un conjunto de 4 <br>
                 números para iniciar el proceso de restablecimineto de su contraseña </b>
         </p>
 
@@ -67,12 +67,12 @@ export default {
                 axios.post('http://localhost:3000/checkNum', {
                     num: this.state.num,
                 }).then((response) => {
-                        console.log(response.data);
-                        this.$router.push('/resetToken');
-                    }).catch((err) => {
-                        console.log(err.response)
-                        this.state.error = err.response.data.error
-                    })
+                    console.log(response.data);
+                    this.$router.push('/resetToken');
+                }).catch((err) => {
+                    console.log(err.response)
+                    this.state.error = err.response.data.error
+                })
             } else {
                 alert('No fue posible realizar la operación')
             }

@@ -1,6 +1,6 @@
 <template>
     <div class="followGrowth">
-        <h1>Seguimiento de Crecimiento</h1>
+        <img img :src="require('../assets/mazorcapp_banner.png')" alt="Mazorcapp banner">
     </div>
     <div id="title">
         <h1 id="t">Mis cultivos</h1>
