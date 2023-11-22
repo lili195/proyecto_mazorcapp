@@ -48,9 +48,9 @@
                                                     <v-col cols="12" sm="12">
                                                         <!-- <v-checkbox label="Recuérdame" class="mt-n1"
                                                             color="#3CB371"></v-checkbox> -->
-                                                        <router-link to="/begin_password_reset">
+                                                        <!-- <router-link to="/begin_password_reset">
                                                             <span style="color: green;">¿Olvidaste tu contraseña?</span>
-                                                        </router-link>
+                                                        </router-link> -->
                                                     </v-col>
                                                     <v-col cols="12" sm="5">
                                                     </v-col>

@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
-const { Sequelize, QueryError } = require('sequelize')
+const { Sequelize } = require('sequelize')
 const { createPerson } = require('./queries/person')
 const { createCrop } = require('./queries/crop')
 const { saveWeatherDatas } = require('./queries/weatherDatas')
